@@ -6,7 +6,7 @@ void	init_prompt(void)
 
 	while (1)
 	{
-		prompt = readline("\e[44m"
+		prompt = readline("\e[34m"
 							"MiniShell$>"
 							"\x1b[m");
 		if (ft_strlen(prompt) > 0)
@@ -21,7 +21,7 @@ void	init_prompt(void)
 	}
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **ev)
 {
 	init_prompt();
 	system("leaks -q minishell");

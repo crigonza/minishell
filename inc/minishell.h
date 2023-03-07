@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/06 21:20:36 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/07 13:58:45 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,15 @@ typedef struct s_lexer
 typedef struct s_command
 {
 	char				*command;
-	char				**path;
+	char				*path;
+	char 				*string;
 	struct s_command	*next;
 	int					in;
 	int					out;
 }						t_command;
 
 //main.c
-int						main(void);
+int						main(int argc, char **argv, char **ev);
 void					init_prompt(void);
 //lexer.c
 void					free_lexer(t_lexer **lexer);
@@ -66,8 +67,9 @@ t_command				*last_command(t_command *command);
 void					parser(t_lexer **lexer);
 void					add_command(t_command **command,
 							t_command *new_command);
-t_command				*new_command(char *command, char **path);
+t_command				*new_command(char *command, char *path, char *string);
 char					*set_command(char *command);
+char					*set_string(char *string);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_command **command);

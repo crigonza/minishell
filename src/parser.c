@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/06 21:20:05 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/07 14:03:34 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,13 @@ void	add_command(t_command **command, t_command *new_command)
 	}
 }
 
-t_command	*new_command(char *command, char **path)
+t_command	*new_command(char *command, char *path, char *string)
 {
 	t_command	*new;
 
+	new = malloc(sizeof(t_command));
 	new->command = command;
+	new->string = string;
 	new->path = path;
 	new->next = NULL;
 	new->in = 0;
@@ -54,37 +56,50 @@ char	*set_command(char *command)
 	return (tmp);
 }
 
+char	*set_string(char *string)
+{
+	char	*tmp;
+
+	tmp = malloc(sizeof(ft_strlen(string) + 1));
+	ft_strlcpy(tmp, string, ft_strlen(string) + 1);
+	return (tmp);
+}
+
 void	parser(t_lexer **lexer)
 {
 	t_command *command;
-	char *comm;
-	char **path;
-	int i;
+	char	*path;
+	char	*comm;
+	char	*string;
 
-	path = malloc(sizeof(path));
 	command = malloc(sizeof(t_command));
 	command = NULL;
+	path = NULL;
+	string = NULL;
 	while ((*lexer) != NULL && (*lexer)->token_type != PIPE)
 	{
 		if ((*lexer)->token_type == COMMAND)
-			comm = set_command((*lexer)->content);
-		if (((*lexer)->token_type == SLASH
-				&& (*lexer)->next->token_type == PATH)
-			|| ((*lexer)->token_type == PATH))
+			comm = set_string((*lexer)->content);
+		if ((*lexer)->token_type == SLASH || ((*lexer)->token_type == PATH))
 		{
-			i = 0;
-			while ((*lexer)->token_type == SLASH
-				|| (*lexer)->token_type == PATH)
-			{
-				path[i] = malloc(sizeof(ft_strlen((*lexer)->content) + 1));
-				ft_strlcpy(path[i], (*lexer)->content,
-						ft_strlen((*lexer)->content) + 1);
-				(*lexer) = (*lexer)->next;
-				i++;
-			}
+			printf("%s\n", (*lexer)->content);
+
+			if (path == NULL)
+				path = set_string((*lexer)->content);
+			else
+				path = ft_strjoin(path, (*lexer)->content);
+		}
+		if ((*lexer)-> token_type == STRING)
+		{
+			string = set_string((*lexer)->content);
 		}
 		(*lexer) = (*lexer)->next;
 	}
-	add_command(&command, new_command(comm, path));
+	add_command(&command, new_command(comm, path, string));
+	/* if ((*lexer)->token_type == PIPE)
+	{
+		(*lexer) = (*lexer)->next;
+		parser(lexer);
+	} */
 	print_command(&command);
 }

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:34 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/06 21:20:11 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/07 11:58:18 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,7 @@ void	print_command(t_command **command)
 	tmp = *command;
 	while (tmp != NULL)
 	{
-		printf("COMMAND: %s\nPATH: ", tmp->command);
-		while (tmp->path[i])
-		{
-			printf("%s", tmp->path[i]);
-			i++;
-		}
-		printf("\nIN:  %d\nOUT: %d\n", tmp->in, tmp->out);
+		printf("COMMAND: %s\nPATH: %s\nSTRING: %s\nIN:  %d\nOUT: %d\n", tmp->command, tmp->path, tmp->string, tmp->in, tmp->out);
 		tmp = tmp->next;
 	}
 }

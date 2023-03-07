@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/06 21:20:16 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/07 14:02:48 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,6 @@ void	tokenize_prompt(t_lexer **lexer, char prompt)
 {
 	if (prompt == '/')
 		add_token(lexer, new_token("/", SLASH));
-	/* else if (prompt == '-')
-        add_token(lexer, new_token("-", MINUS)); */
 	else if (prompt == '|')
 		add_token(lexer, new_token("|", PIPE));
 	else if (prompt == '<')
@@ -137,7 +135,7 @@ t_lexer	*new_token(char *content, int token_type)
 {
 	t_lexer	*new;
 
-	new = (t_lexer *)malloc(sizeof(*new));
+	new = malloc(sizeof(t_lexer));
 	if (!new)
 		return (NULL);
 	new->content = malloc(sizeof(ft_strlen(content) + 1));
