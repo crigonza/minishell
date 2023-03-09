@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/07 14:02:48 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/08 21:59:30 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	get_string(t_lexer **lexer, char *prompt)
 	ft_strlcpy(str, prompt, i + 1);
 	add_token(lexer, new_token(str, STRING));
 	free(str);
-	return (i);
+	return (i + 1);
 }
 
 int	get_command(t_lexer **lexer, char *prompt)
@@ -48,7 +48,7 @@ int	get_command(t_lexer **lexer, char *prompt)
 	i = 0;
 	while (prompt[i] == '-')
 		i++;
-	while (ft_isalpha(prompt[i]))
+	while (prompt[i] && prompt[i] != '\t' && prompt[i] != ' ' && prompt[i] != '|')
 		i++;
 	str = malloc(sizeof(i + 1));
 	ft_strlcpy(str, prompt, i + 1);
@@ -60,7 +60,7 @@ int	get_command(t_lexer **lexer, char *prompt)
 	return (i);
 }
 
-int	get_num(t_lexer **lexer, char *prompt)
+/* int	get_num(t_lexer **lexer, char *prompt)
 {
 	char	*str;
 	int		i;
@@ -73,12 +73,12 @@ int	get_num(t_lexer **lexer, char *prompt)
 	add_token(lexer, new_token(str, COMMAND));
 	free(str);
 	return (i);
-}
+} */
 
-void	tokenize_prompt(t_lexer **lexer, char prompt)
+/* void	tokenize_prompt(t_lexer **lexer, char prompt)
 {
 	if (prompt == '/')
-		add_token(lexer, new_token("/", SLASH));
+		add_token(lexer, new_token("/", SLASH)); 
 	else if (prompt == '|')
 		add_token(lexer, new_token("|", PIPE));
 	else if (prompt == '<')
@@ -92,10 +92,10 @@ void	tokenize_prompt(t_lexer **lexer, char prompt)
 	else if (prompt == ')')
 		add_token(lexer, new_token(")", R_PAR));
 	else if (prompt == '$')
-		add_token(lexer, new_token("$", DOLLAR));
-}
+		add_token(lexer, new_token("$", DOLLAR)); 
+} */
 
-void	init_lexer(char *prompt)
+void	init_lexer(char *prompt, char **envp)
 {
 	int		i;
 	int		j;
@@ -103,30 +103,34 @@ void	init_lexer(char *prompt)
 	t_lexer	*lexer;
 
 	i = 0;
-	//printf("%s\n", prompt);
-	//lexer = (t_lexer *)malloc(sizeof(*lexer));
+	lexer = (t_lexer *)malloc(sizeof(t_lexer));
 	lexer = NULL;
 	while (prompt[i] != '\0')
 	{
-		/* if (prompt[i] == ' ' || prompt[i] == '\t')
-            i++;  */
-		if (ft_isalpha(prompt[i]))
-			i += get_command(&lexer, &prompt[i]);
-		if (prompt[i] == '-')
-			i += get_command(&lexer, &prompt[i]);
-		if (ft_isalnum(prompt[i]))
-			i += get_num(&lexer, &prompt[i]);
+		while(prompt[i] == ' ' || prompt[i] == '\t')
+            i++;
 		if (prompt[i] == 34)
 		{
 			i++;
 			i += get_string(&lexer, &prompt[i]);
 		}
-		else
-			tokenize_prompt(&lexer, prompt[i]);
+		if (ft_isprint(prompt[i]))
+			i += get_command(&lexer, &prompt[i]);
+		/* if (prompt[i] == '-')
+			i += get_command(&lexer, &prompt[i]);
+		if (ft_isalnum(prompt[i]))
+			i += get_num(&lexer, &prompt[i]); */
+		
+        if (prompt[i] == '|')
+		    add_token(&lexer, new_token("|", PIPE));
+		/* else
+			tokenize_prompt(&lexer, prompt[i]); */
 		i++;
 	}
 	print_lexer(&lexer);
-	parser(&lexer);
+	lexer->envp = envp;
+	retokenize(&lexer);
+	//parser(&lexer);
 	free_lexer(&lexer);
 	//free (lexer);
 }

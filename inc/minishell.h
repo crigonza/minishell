@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/07 13:58:45 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/08 18:26:29 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,12 @@ typedef struct s_lexer
 	} token_type;
 	char				*content;
 	struct s_lexer		*next;
+	char				**envp;
 }						t_lexer;
 
 typedef struct s_command
 {
-	char				*command;
-	char				*path;
-	char 				*string;
+	char				**command;
 	struct s_command	*next;
 	int					in;
 	int					out;
@@ -51,10 +50,10 @@ typedef struct s_command
 
 //main.c
 int						main(int argc, char **argv, char **ev);
-void					init_prompt(void);
+void					init_prompt(char **envp);
 //lexer.c
 void					free_lexer(t_lexer **lexer);
-void					init_lexer(char *prompt);
+void					init_lexer(char *prompt, char **envp);
 int						get_string(t_lexer **lexer, char *prompt);
 int						get_command(t_lexer **lexer, char *prompt);
 int						get_num(t_lexer **lexer, char *prompt);
@@ -62,14 +61,19 @@ void					tokenize_prompt(t_lexer **lexer, char prompt);
 t_lexer					*new_token(char *content, int token_type);
 void					add_token(t_lexer **lexer, t_lexer *new);
 t_lexer					*last_token(t_lexer *lexer);
+//expander.c
+void    				retokenize(t_lexer **lexer);
+void    				expander(t_lexer **lexer);
+char					*get_envp_key(char *content ,char **envp);
+char    				*get_envp_value(char **envp, char *search);
+char					*get_envp(char *content ,char **envp);
 //parser.c
 t_command				*last_command(t_command *command);
 void					parser(t_lexer **lexer);
 void					add_command(t_command **command,
 							t_command *new_command);
-t_command				*new_command(char *command, char *path, char *string);
+t_command				*new_command(char **command);
 char					*set_command(char *command);
-char					*set_string(char *string);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_command **command);
