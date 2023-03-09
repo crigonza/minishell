@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/08 18:26:29 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/09 10:51:46 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_lexer					*last_token(t_lexer *lexer);
 //expander.c
 void    				retokenize(t_lexer **lexer);
 void    				expander(t_lexer **lexer);
-char					*get_envp_key(char *content ,char **envp);
+char					*get_envp_key(char *content);
 char    				*get_envp_value(char **envp, char *search);
 char					*get_envp(char *content ,char **envp);
 //parser.c

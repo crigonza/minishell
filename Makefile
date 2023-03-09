@@ -6,13 +6,13 @@
 #    By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 21:13:04 by crigonza          #+#    #+#              #
-#    Updated: 2023/03/02 19:29:39 by crigonza         ###   ########.fr        #
+#    Updated: 2023/03/09 11:04:21 by crigonza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 CC		= gcc -lreadline
-FLAGS	= -lreadline
+CFLAGS	=
 LIBFT	= ./libft
 
 HEADERS = -I ./inc
@@ -35,7 +35,7 @@ clean:
 	@rm -f $(OBJS)
 	$(MAKE)	-C $(LIBFT) clean
 
-fclean:
+fclean:clean
 	@rm -f $(NAME)
 	$(MAKE) -C $(LIBFT) fclean
 

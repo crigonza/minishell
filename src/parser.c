@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/07 21:07:31 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/09 12:37:36 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,41 +54,68 @@ char	*set_command(char *command)
 	return (tmp);
 }
 
+int	get_count(t_lexer **lexer)
+{
+	t_lexer	*tmp;
+	int count;
+
+	count = 0;
+	tmp = *lexer;
+	while (tmp != NULL && tmp->token_type != PIPE)
+	{
+		tmp = tmp->next;
+		count++;
+	}
+	return(count);
+
+}
+
 void	parser(t_lexer **lexer)
 {
-	t_command *command;
-	char    **comm;
-    int     i;
+	t_lexer		*tmp;
+	t_command	*command;
+	char    	**comm;
+    int    		i;
+	int			j;
 
+	j = 0;
     i = 0;
+	tmp = *lexer;
 	command = malloc(sizeof(t_command));
 	command = NULL;
-	while ((*lexer) != NULL && (*lexer)->token_type != PIPE)
+	comm = malloc(sizeof(char*) * get_count(lexer) + 1);
+	while (tmp != NULL && tmp->token_type != PIPE)
 	{
-		if ((*lexer)->token_type == COMMAND)
-			comm[i] = set_command((*lexer)->content);
-		/* if ((*lexer)->token_type == SLASH || ((*lexer)->token_type == PATH))
+		//if (tmp->token_type == COMMAND  || tmp->token_type == PATH || tmp->token_type == STRING)
+		comm[i] = tmp->content; 
+		//comm[i] = set_command(tmp->content);
+		/* if (tmp->token_type == SLASH || (tmp->token_type == PATH))
 		{
-			printf("%s\n", (*lexer)->content);
+			printf("%s\n", tmp->content);
 
 			if (path == NULL)
-				path = set_command((*lexer)->content);
+				path = set_command(tmp->content);
 			else
-				path = ft_strjoin(path, (*lexer)->content);
-		} */
-		if ((*lexer)-> token_type == STRING)
+				path = ft_strjoin(path, tmp->content);
+		} 
+		if (tmp-> token_type == STRING)
 		{
-			comm[i] = set_command((*lexer)->content);
-		}
-		(*lexer) = (*lexer)->next;
+			comm[i] = set_command(tmp->content);
+		}*/
+		//comm[i] = tmp->content;
+		tmp = tmp->next;
         i++;
 	}
-    printf("%s\n", comm[i]);
+	comm[i] = NULL;
+	//new_command(comm);
+	add_command(&command, new_command(comm));
+    //printf("%s\n", comm[i]);
 	//add_command(&command, new_command(&comm));
 	/* if ((*lexer)->token_type == PIPE)
 	{
 		(*lexer) = (*lexer)->next;
 		parser(lexer);
 	} */
-	//print_command(&command);
+	//execve(comm[0], comm, NULL);
+	print_command(&command);
 }

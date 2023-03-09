@@ -6,12 +6,39 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/08 23:45:59 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/09 11:54:52 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
+char	*get_envp_2(char *content, char *expanded)
+{
+	char	*tmp;
+	int		i;
+	int		j;
+	
+	i = 0;
+	j = 0;
+	while (content[i] != '$')
+		i++;
+	i++;
+	while ((content[i] >= 'A' && content[i] <= 'Z') || content[i] == '(' || content[i] == ')')
+		i++;
+	if (!content[i])
+		return (expanded);
+	else
+		{
+			while(content[i])
+			{
+				i++;
+				j++;
+			}
+			tmp = malloc(sizeof(j + 1));
+			ft_strlcpy(tmp, &content[i - j], j + 1);
+			expanded = ft_strjoin(expanded, tmp);
+			return(expanded);
+		}
+}
 char	*get_envp(char *content, char **envp)
 {
 	int		i;
@@ -20,7 +47,7 @@ char	*get_envp(char *content, char **envp)
 	char	*expanded;
 
 	i = 0;
-	key = get_envp_key(content, envp);
+	key = get_envp_key(content);
 	value = get_envp_value(envp, key);
     if (content[i] != '$')
     {
@@ -32,11 +59,12 @@ char	*get_envp(char *content, char **envp)
     }
     else
         expanded = value;
+	expanded = get_envp_2(content, expanded);
 	//printf("%s----%d\n", expanded, i);
 	return (expanded);
 }
 
-char	*get_envp_key(char *content, char **envp)
+char	*get_envp_key(char *content)
 {
 	char	*envp_key;
 	int		i;
@@ -63,7 +91,6 @@ char	*get_envp_key(char *content, char **envp)
 char	*get_envp_value(char **envp, char *search)
 {
 	int		i;
-	int		j;
 	char	*value;
 	char	*tmp;
 
@@ -87,7 +114,6 @@ void	expander(t_lexer **lexer)
 {
 	t_lexer	*tmp;
 	char	**envp;
-	char	*value;
 	int		i;
 
 	tmp = *lexer;
@@ -110,6 +136,7 @@ void	expander(t_lexer **lexer)
 	}
 	free(tmp);
 	print_lexer(lexer);
+	parser(lexer);
 }
 
 void	retokenize(t_lexer **lexer)

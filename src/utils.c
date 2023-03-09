@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:34 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/08 23:50:40 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/09 12:34:38 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,18 @@ void	print_lexer(t_lexer **lexer)
 
 void	print_command(t_command **command)
 {
-	t_command *tmp;
+	t_command	*tmp;
+	int			i;
     
 	tmp = *command;
 	while (tmp != NULL)
 	{
+		while (tmp->command[i])
+		{
+			printf("%s, ", tmp->command[i]);
+			i++;
+		}
 		tmp = tmp->next;
 	}
+	printf("\n");
 }
