@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/09 10:51:46 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/09 18:53:31 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_command
 {
 	char				**command;
 	struct s_command	*next;
+	char				**envp;
 	int					in;
 	int					out;
 }						t_command;
@@ -62,6 +63,7 @@ t_lexer					*new_token(char *content, int token_type);
 void					add_token(t_lexer **lexer, t_lexer *new);
 t_lexer					*last_token(t_lexer *lexer);
 //expander.c
+void					full_path(t_lexer **lexer);
 void    				retokenize(t_lexer **lexer);
 void    				expander(t_lexer **lexer);
 char					*get_envp_key(char *content);
@@ -74,6 +76,11 @@ void					add_command(t_command **command,
 							t_command *new_command);
 t_command				*new_command(char **command);
 char					*set_command(char *command);
+//executer.c
+void					executer(char **command, char **envp);
+//builtin.c
+void					is_builtin(t_command **command);
+void					echo(char **command);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_command **command);

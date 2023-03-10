@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/09 12:37:36 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/09 18:48:20 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,14 @@ void	parser(t_lexer **lexer)
 	t_lexer		*tmp;
 	t_command	*command;
 	char    	**comm;
+	char		**envp;
     int    		i;
 	int			j;
 
 	j = 0;
     i = 0;
 	tmp = *lexer;
+	envp = (*lexer)->envp;
 	command = malloc(sizeof(t_command));
 	command = NULL;
 	comm = malloc(sizeof(char*) * get_count(lexer) + 1);
@@ -88,34 +90,12 @@ void	parser(t_lexer **lexer)
 	{
 		//if (tmp->token_type == COMMAND  || tmp->token_type == PATH || tmp->token_type == STRING)
 		comm[i] = tmp->content; 
-		//comm[i] = set_command(tmp->content);
-		/* if (tmp->token_type == SLASH || (tmp->token_type == PATH))
-		{
-			printf("%s\n", tmp->content);
-
-			if (path == NULL)
-				path = set_command(tmp->content);
-			else
-				path = ft_strjoin(path, tmp->content);
-		} 
-		if (tmp-> token_type == STRING)
-		{
-			comm[i] = set_command(tmp->content);
-		}*/
-		//comm[i] = tmp->content;
 		tmp = tmp->next;
         i++;
 	}
 	comm[i] = NULL;
-	//new_command(comm);
 	add_command(&command, new_command(comm));
-    //printf("%s\n", comm[i]);
-	//add_command(&command, new_command(&comm));
-	/* if ((*lexer)->token_type == PIPE)
-	{
-		(*lexer) = (*lexer)->next;
-		parser(lexer);
-	} */
-	//execve(comm[0], comm, NULL);
+	command->envp = (*lexer)->envp;
 	print_command(&command);
+	is_builtin(&command);
 }

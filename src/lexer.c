@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/08 21:59:30 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/09 18:20:18 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void	init_lexer(char *prompt, char **envp)
 	}
 	print_lexer(&lexer);
 	lexer->envp = envp;
-	retokenize(&lexer);
+	full_path(&lexer);
 	//parser(&lexer);
 	free_lexer(&lexer);
 	//free (lexer);
