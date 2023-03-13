@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/09 18:53:31 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/13 19:23:22 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ void					executer(char **command, char **envp);
 //builtin.c
 void					is_builtin(t_command **command);
 void					echo(char **command);
+void					pwd(char **command);
+void					cd(char **command);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_command **command);

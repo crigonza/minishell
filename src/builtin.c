@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/09 18:55:04 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/13 19:40:38 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,48 @@ void is_builtin(t_command **command)
     com = (*command)->command[0];
     if(!ft_strncmp("/bin/echo", com, ft_strlen(com)))
         echo((*command)->command);
+    else if(!ft_strncmp("/bin/pwd", com, ft_strlen(com)))
+        pwd((*command)->command);
+    else if(!ft_strncmp("/bin/cd", com, ft_strlen(com)))
+        cd((*command)->command);
     else
         executer((*command)->command, (*command)->envp);
 
 }
 
-
 void echo(char **command)
 {
-    ft_putstr_fd(command[1], 1);
-    write(1,"\n",1);
+    if (!ft_strncmp(command[1], "-n", 2))
+        ft_putstr_fd(command[2], 1);
+    else
+        ft_putendl_fd(command[1], 1);
+        //write(1,"\n",1);
+}
+
+void pwd(char **command)
+{
+    if(!command[1])
+        ft_putendl_fd(getcwd(NULL, 0), 1);
+    else
+        ft_putendl_fd("pwd: too many arguments", 2);
+}
+
+void cd(char **command)
+{
+    int val;
+
+    if(!command[2])
+    {
+        val = chdir(command[1]);
+        if (val == -1)
+        {
+            ft_putstr_fd("cd: no such file or directory: ", 2);
+            ft_putendl_fd(command[1], 2);
+        }
+    }
+    else
+    {
+        ft_putstr_fd("cd: string not in pwd: ", 2);
+        ft_putendl_fd(command[1], 2);
+    }
 }
