@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/09 18:48:20 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/14 20:14:01 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,19 +70,17 @@ int	get_count(t_lexer **lexer)
 
 }
 
-void	parser(t_lexer **lexer)
+void	parser(t_lexer **lexer, t_list **envp)
 {
 	t_lexer		*tmp;
 	t_command	*command;
 	char    	**comm;
-	char		**envp;
     int    		i;
 	int			j;
 
 	j = 0;
     i = 0;
 	tmp = *lexer;
-	envp = (*lexer)->envp;
 	command = malloc(sizeof(t_command));
 	command = NULL;
 	comm = malloc(sizeof(char*) * get_count(lexer) + 1);
@@ -95,7 +93,6 @@ void	parser(t_lexer **lexer)
 	}
 	comm[i] = NULL;
 	add_command(&command, new_command(comm));
-	command->envp = (*lexer)->envp;
 	print_command(&command);
-	is_builtin(&command);
+	is_builtin(&command, envp);
 }

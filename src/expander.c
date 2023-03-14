@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/09 18:24:23 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/14 20:58:12 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*get_envp_2(char *content, char *expanded)
 		return (expanded);
 	}
 }
-char	*get_envp(char *content, char **envp)
+char	*get_envp(char *content, t_list **envp)
 {
 	int		i;
 	char	*key;
@@ -90,36 +90,31 @@ char	*get_envp_key(char *content)
 	return (envp_key);
 }
 
-char	*get_envp_value(char **envp, char *search)
+char	*get_envp_value(t_list **envp, char *search)
 {
-	int		i;
 	char	*value;
 	char	*tmp;
+	t_list 	*aux;
 
-	i = 0;
-	while (envp[i])
+	aux = *envp;
+	while (aux != NULL)
 	{
-		if (!ft_strncmp(envp[i], search, ft_strlen(search)))
+		if (!ft_strncmp(aux->content, search, ft_strlen(search)))
 			break ;
-		i++;
+		aux = aux->next;
 	}
-	/* while (envp[i][j] != '=')
-		j++; */
-	tmp = ft_strchr(envp[i], '=') + 1;
+	tmp = ft_strchr(aux->content, '=') + 1;
 	value = malloc(sizeof(ft_strlen(tmp) + 1));
 	ft_strlcpy(value, tmp, ft_strlen(tmp) + 1);
-	//printf("%s\n", value);
 	return (value);
 }
 
-void	expander(t_lexer **lexer)
+void	expander(t_lexer **lexer, t_list **envp)
 {
 	t_lexer	*tmp;
-	char	**envp;
 	int		i;
 
 	tmp = *lexer;
-	envp = (*lexer)->envp;
 	while (tmp != NULL && tmp->token_type != PIPE)
 	{
 		i = 0;
@@ -135,10 +130,10 @@ void	expander(t_lexer **lexer)
 	}
 	free(tmp);
 	print_lexer(lexer);
-	parser(lexer);
+	parser(lexer, envp);
 }
 
-void	retokenize(t_lexer **lexer)
+void	retokenize(t_lexer **lexer, t_list **envp)
 {
 	t_lexer	*tmp;
 	int		i;
@@ -155,18 +150,23 @@ void	retokenize(t_lexer **lexer)
 			{
 				if (tmp->content[i] == '/')
 					tmp->token_type = PATH;
+				if (tmp->content[i] == '$')
+					tmp->token_type = STRING;
 				i++;
 			}
 		}
 		tmp = tmp->next;
 	}
 	free(tmp);
-	expander(lexer);
+	full_path(lexer);
+	expander(lexer, envp);
 }
 
 void	full_path(t_lexer **lexer)
 {
 	if ((*lexer)->token_type == COMMAND)
-		(*lexer)->content = ft_strjoin("/bin/", (*lexer)->content);
-	retokenize(lexer);
+	{
+		if(ft_strncmp("/bin/", (*lexer)->content, 5) != 0)
+			(*lexer)->content = ft_strjoin("/bin/", (*lexer)->content);
+	}
 }

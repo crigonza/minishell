@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/13 18:58:39 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/14 20:56:25 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,42 +60,7 @@ int	get_command(t_lexer **lexer, char *prompt)
 	return (i);
 }
 
-/* int	get_num(t_lexer **lexer, char *prompt)
-{
-	char	*str;
-	int		i;
-
-	i = 0;
-	while (ft_isalnum(prompt[i]))
-		i++;
-	str = malloc(sizeof(i + 1));
-	ft_strlcpy(str, prompt, i + 1);
-	add_token(lexer, new_token(str, COMMAND));
-	free(str);
-	return (i);
-} */
-
-/* void	tokenize_prompt(t_lexer **lexer, char prompt)
-{
-	if (prompt == '/')
-		add_token(lexer, new_token("/", SLASH)); 
-	else if (prompt == '|')
-		add_token(lexer, new_token("|", PIPE));
-	else if (prompt == '<')
-		add_token(lexer, new_token("<", LESS_THAN));
-	else if (prompt == '>')
-		add_token(lexer, new_token(">", GREATER_THAN));
-	else if (prompt == ';')
-		add_token(lexer, new_token(";", SEMICOLON));
-	else if (prompt == '(')
-		add_token(lexer, new_token("(", L_PAR));
-	else if (prompt == ')')
-		add_token(lexer, new_token(")", R_PAR));
-	else if (prompt == '$')
-		add_token(lexer, new_token("$", DOLLAR)); 
-} */
-
-void	init_lexer(char *prompt, char **envp)
+void	init_lexer(char *prompt, t_list **envp)
 {
 	int		i;
 	int		j;
@@ -116,23 +81,14 @@ void	init_lexer(char *prompt, char **envp)
 		}
 		if (ft_isprint(prompt[i]))
 			i += get_command(&lexer, &prompt[i]);
-		/* if (prompt[i] == '-')
-			i += get_command(&lexer, &prompt[i]);
-		if (ft_isalnum(prompt[i]))
-			i += get_num(&lexer, &prompt[i]); */
-		
         if (prompt[i] == '|')
 		    add_token(&lexer, new_token("|", PIPE));
-		/* else
-			tokenize_prompt(&lexer, prompt[i]); */
 		i++;
 	}
 	print_lexer(&lexer);
 	lexer->envp = envp;
-	full_path(&lexer);
-	//parser(&lexer);
+	retokenize(&lexer, envp);
 	free_lexer(&lexer);
-	//free (lexer);
 }
 
 t_lexer	*new_token(char *content, int token_type)

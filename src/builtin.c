@@ -6,13 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/14 12:37:05 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/14 20:21:19 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void is_builtin(t_command **command)
+void is_builtin(t_command **command, t_list **envp)
 {
     char *com;
     /* char **env_tmp;
@@ -26,12 +26,9 @@ void is_builtin(t_command **command)
     else if(!ft_strncmp("/bin/cd", com, ft_strlen(com)))
         cd((*command)->command);
     else if(!ft_strncmp("/bin/env", com, ft_strlen(com)))
-        env((*command)->envp, (*command)->command);
+        env(envp, (*command)->command);
     else if(!ft_strncmp("/bin/export", com, ft_strlen(com)))
-    {
-        //free((*command)->envp);
-        (*command)->envp = insert_env((*command)->envp, (*command)->command);
-    }
+        insert_env(envp, (*command)->command);
     else
         executer((*command)->command, (*command)->envp);
 
@@ -73,17 +70,17 @@ void cd(char **command)
     }
 }
 
-void env(char **envp, char **command)
+void env(t_list **envp, char **command)
 {
-    int i;
+    t_list *tmp;
 
-    i = 0;
+    tmp = *envp;
     if(!command[1])
     {
-        while(envp[i])
+        while(tmp != NULL)
         {
-            printf("%s\n", envp[i]);
-            i++;
+            printf("%s\n", tmp->content);
+            tmp = tmp->next;
         }
     }
     else
