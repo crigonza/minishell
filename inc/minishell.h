@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/13 19:23:22 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/14 13:19:41 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,10 @@ void					is_builtin(t_command **command);
 void					echo(char **command);
 void					pwd(char **command);
 void					cd(char **command);
+void					env(char **envp, char **env);
+//envp.c
+void					list_envp(char **envp, t_list **envp_lst);
+char					**insert_env(char **envp, char **command);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_command **command);

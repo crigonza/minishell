@@ -23,17 +23,20 @@ void	init_prompt(char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-    int i;
+	t_list	*envp_lst;
+	t_list	*tmp;
 
-    i = 0;
-    get_envp_value(envp, "PWD");
-    /* while(envp[i])
-    {
-        printf("%s\n", envp[i]);
-        i++;
-    } */
-    
-	init_prompt(envp);
+	envp_lst = malloc(sizeof(t_list));
+	envp_lst = NULL;
+	list_envp(envp, &envp_lst);
+    //printf("%s", envp_lst->content);
+	/* tmp = *envp_lst;
+	while(tmp->next == NULL)
+	{
+		printf("%s\n", tmp->content);
+		tmp = tmp->next;
+	} */
+	//init_prompt(envp_lst);
 	system("leaks -q minishell");
 	return (0);
 }
