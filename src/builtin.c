@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/14 20:21:19 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/15 17:17:40 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void env(t_list **envp, char **command)
     {
         while(tmp != NULL)
         {
-            printf("%s\n", tmp->content);
+            ft_putendl_fd(tmp->content, 1);
             tmp = tmp->next;
         }
     }

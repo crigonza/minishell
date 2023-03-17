@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/14 20:58:12 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/16 18:19:15 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	expander(t_lexer **lexer, t_list **envp)
 	int		i;
 
 	tmp = *lexer;
-	while (tmp != NULL && tmp->token_type != PIPE)
+	while (tmp != NULL)
 	{
 		i = 0;
 		while (tmp->content[i] != '\0')
@@ -144,8 +144,6 @@ void	retokenize(t_lexer **lexer, t_list **envp)
 	{
 		if (tmp->token_type == COMMAND)
 		{
-			if (!ft_strncmp(tmp->content, "echo", 4))
-				tmp->next->token_type = STRING;
 			while (tmp->content[i])
 			{
 				if (tmp->content[i] == '/')

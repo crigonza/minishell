@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/14 20:56:25 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/16 18:36:55 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ void	free_lexer(t_lexer **lexer)
 {
 	t_lexer	*tmp;
 
-	tmp = *lexer;
-	while (tmp != NULL)
+	while ((*lexer) != NULL)
 	{
+		tmp = *lexer;
+		(*lexer) = (*lexer)->next;
 		free(tmp->content);
 		free(tmp);
-		tmp = tmp->next;
 	}
 }
 
@@ -30,14 +30,34 @@ int	get_string(t_lexer **lexer, char *prompt)
 	char	*str;
 	int		i;
 
-	i = 0;
+	i = 1;
 	while (prompt[i] != 34)
 		i++;
 	str = malloc(sizeof(i + 1));
 	ft_strlcpy(str, prompt, i + 1);
 	add_token(lexer, new_token(str, STRING));
 	free(str);
-	return (i + 1);
+	return (i + 2);
+}
+
+int	get_echo_string(t_lexer **lexer, char *prompt)
+{
+	int	i;
+	char *str;
+
+	i = 0;
+	if (prompt[i] == 34)
+		return(i);
+		//i += get_string(lexer, &prompt[i + 1]);
+	else
+	{
+		while(prompt[i] && prompt[i] != '|')
+			i++;
+		str = malloc(sizeof(i + 1));
+		ft_strlcpy(str, prompt, i + 1);
+		add_token(lexer, new_token(str, STRING));
+	}
+	return (i);
 }
 
 int	get_command(t_lexer **lexer, char *prompt)
@@ -56,15 +76,20 @@ int	get_command(t_lexer **lexer, char *prompt)
 		add_token(lexer, new_token(str, PATH));
 	else
 		add_token(lexer, new_token(str, COMMAND));
+	if (!ft_strncmp(str, "echo", 4))
+	{
+		while(prompt[i] == ' ' || prompt[i] == '\t')
+		i++;
+		i += get_echo_string(lexer, &prompt[i]);
+	}
 	free(str);
 	return (i);
 }
 
+
 void	init_lexer(char *prompt, t_list **envp)
 {
 	int		i;
-	int		j;
-	char	*str;
 	t_lexer	*lexer;
 
 	i = 0;
@@ -72,23 +97,26 @@ void	init_lexer(char *prompt, t_list **envp)
 	lexer = NULL;
 	while (prompt[i] != '\0')
 	{
-		while(prompt[i] == ' ' || prompt[i] == '\t')
-            i++;
-		if (prompt[i] == 34)
+		while(prompt[i] == ' ' || prompt[i] == '\t' || prompt[i] == '|')
 		{
-			i++;
-			i += get_string(&lexer, &prompt[i]);
+			if (prompt[i] == '|')
+		    	add_token(&lexer, new_token("|", PIPE));
+            i++;
 		}
+		if (prompt[i] == 34)
+			i += get_string(&lexer, &prompt[i + 1]);
 		if (ft_isprint(prompt[i]))
 			i += get_command(&lexer, &prompt[i]);
         if (prompt[i] == '|')
+			{
 		    add_token(&lexer, new_token("|", PIPE));
-		i++;
+			i++;
+			}
 	}
 	print_lexer(&lexer);
-	lexer->envp = envp;
 	retokenize(&lexer, envp);
 	free_lexer(&lexer);
+	//free(lexer);
 }
 
 t_lexer	*new_token(char *content, int token_type)

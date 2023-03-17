@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:34 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/09 12:34:38 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/17 08:23:44 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	print_command(t_command **command)
 	t_command	*tmp;
 	int			i;
     
+	i = 0;
 	tmp = *command;
 	while (tmp != NULL)
 	{
@@ -38,7 +39,15 @@ void	print_command(t_command **command)
 			printf("%s, ", tmp->command[i]);
 			i++;
 		}
+		printf("\n");
+		i = 0;
 		tmp = tmp->next;
 	}
 	printf("\n");
+	/* while ((*command)->command[i])
+	{
+		printf("%s, ", (*command)->command[i]);
+		i++;
+	}
+	printf("\n"); */
 }

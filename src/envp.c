@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 11:35:20 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/14 20:30:41 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/15 17:12:48 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void  list_envp(char **envp, t_list **envp_lst)
 
 void    insert_env(t_list **envp, char **command)
 {
-    t_list  *temp;
+    /* t_list  *temp;
 
-    temp = *envp;
+    temp = *envp; */
 
     ft_lstadd_back(envp, ft_lstnew(command[1]));
 }

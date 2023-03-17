@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/14 20:57:30 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/16 19:29:31 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../Libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <stdlib.h>
 # include <stdio.h>
 
 typedef struct s_lexer
@@ -72,6 +73,7 @@ char					*get_envp(char *content ,t_list **envp);
 //parser.c
 t_command				*last_command(t_command *command);
 void					parser(t_lexer **lexer, t_list **envp);
+void					parse_command(t_command **command, t_lexer **lexer);
 void					add_command(t_command **command,
 							t_command *new_command);
 t_command				*new_command(char **command);
