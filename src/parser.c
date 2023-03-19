@@ -6,15 +6,15 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/17 08:22:40 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/19 12:09:39 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	free_command(t_command **command)
+void	free_command(t_full_comm **command)
 {
-	t_command	*tmp;
+	t_full_comm	*tmp;
 
 	while ((*command) != NULL)
 	{
@@ -25,24 +25,17 @@ void	free_command(t_command **command)
 	}
 }
 
-t_command	*last_command(t_command *command)
+t_full_comm	*last_command(t_full_comm *command)
 {
 	while (command->next != NULL)
 		command = command->next;
 	return (command);
 }
 
-void	add_command(t_command **command, t_command *new_command)
+void	add_command(t_full_comm **command, t_full_comm *new_command)
 {
-	t_command	*tmp;
-	int i = 0;
+	t_full_comm	*tmp;
 
-	while(new_command->command[i])
-	{
-		printf("%s|||", new_command->command[i]);
-		i++;
-	}
-	printf("\n");
 	tmp = *command;
 	if (*command == NULL)
 		*command = new_command;
@@ -53,29 +46,20 @@ void	add_command(t_command **command, t_command *new_command)
 	}
 }
 
-t_command	*new_command(char **command)
+t_full_comm	*new_command(char **command)
 {
-	t_command	*new;
-	int i = 0;
+	t_full_comm	*new;
 
-	new = malloc(sizeof(t_command));
+	new = malloc(sizeof(t_full_comm));
 	new->command = command;
 	new->next = NULL;
-	new->in = 0;
-	new->out = 0;
-	while(command[i])
-	{
-		printf("%s----", command[i]);
-		i++;
-	}
-	printf("\n");
 	return (new);
 }
 
 int	get_count(t_lexer **lexer)
 {
 	t_lexer	*tmp;
-	int count;
+	int		count;
 
 	count = 0;
 	tmp = *lexer;
@@ -84,7 +68,7 @@ int	get_count(t_lexer **lexer)
 		tmp = tmp->next;
 		count++;
 	}
-	return(count - 1);
+	return (count);
 }
 
 void	parser(t_lexer **lexer, t_list **envp)
@@ -92,30 +76,35 @@ void	parser(t_lexer **lexer, t_list **envp)
 	t_command	*command;
 
 	command = malloc(sizeof(t_command));
-	command = NULL;
-	parse_command(&command, lexer);
-	print_command(&command);
-	is_builtin(&command, envp);
-	free_command(&command);
+	command->envp = (*lexer)->envp;
+	command->filein = 0;
+	command->fileout = 0;
+	command->command = malloc(sizeof(t_full_comm));
+	command->command = NULL;
+	parse_command(&command->command, lexer);
+	print_command(&command->command);
+	is_builtin(command, envp);
+	free_command(&command->command);
 }
 
-void parse_command(t_command **command, t_lexer **lexer)
+void	parse_command(t_full_comm **command, t_lexer **lexer)
 {
-	char    	**comm;
-	t_lexer		*tmp;
-    int    		i;
+	char **comm;
+	t_lexer *tmp;
+	int i;
 
-    i = 0;
+	i = 0;
 	tmp = *lexer;
-	comm = malloc(sizeof(char) * (get_count(lexer)));
+	comm = malloc(sizeof(char *) * (get_count(lexer) + 1));
+	comm[get_count(lexer)] = NULL;
 	while (tmp != NULL && tmp->token_type != PIPE)
 	{
 		comm[i] = tmp->content;
 		tmp = tmp->next;
-        i++;
+		i++;
 	}
 	add_command(command, new_command(comm));
-	if(tmp != NULL && tmp->token_type == PIPE)
+	if (tmp != NULL && tmp->token_type == PIPE)
 	{
 		tmp = tmp->next;
 		parse_command(command, &tmp);

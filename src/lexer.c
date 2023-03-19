@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/16 18:36:55 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/19 11:04:27 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	get_command(t_lexer **lexer, char *prompt)
 }
 
 
-void	init_lexer(char *prompt, t_list **envp)
+void	init_lexer(char *prompt, t_list **envp, char **ev)
 {
 	int		i;
 	t_lexer	*lexer;
@@ -114,6 +114,7 @@ void	init_lexer(char *prompt, t_list **envp)
 			}
 	}
 	print_lexer(&lexer);
+	lexer->envp = ev;
 	retokenize(&lexer, envp);
 	free_lexer(&lexer);
 	//free(lexer);

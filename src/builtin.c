@@ -6,31 +6,34 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/15 17:17:40 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/19 12:03:31 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void is_builtin(t_command **command, t_list **envp)
+void is_builtin(t_command *comm, t_list **envp)
 {
     char *com;
     /* char **env_tmp;
 
     env_tmp = (*command)->envp; */
-    com = (*command)->command[0];
+    com = comm->command->command[0];
     if(!ft_strncmp("/bin/echo", com, ft_strlen(com)))
-        echo((*command)->command);
+        echo(comm->command->command);
     else if(!ft_strncmp("/bin/pwd", com, ft_strlen(com)))
-        pwd((*command)->command);
+        pwd(comm->command->command);
     else if(!ft_strncmp("/bin/cd", com, ft_strlen(com)))
-        cd((*command)->command);
+        cd(comm->command->command);
     else if(!ft_strncmp("/bin/env", com, ft_strlen(com)))
-        env(envp, (*command)->command);
+        env(envp, comm->command->command);
     else if(!ft_strncmp("/bin/export", com, ft_strlen(com)))
-        insert_env(envp, (*command)->command);
+        insert_env(envp, comm->command->command);
     else
-        executer((*command)->command, (*command)->envp);
+        if(comm->command->next == NULL)
+            executer(comm->command->command, comm->envp);
+        else
+            execute_pipe(comm);
 
 }
 

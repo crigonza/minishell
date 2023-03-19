@@ -1,6 +1,6 @@
 #include "../inc/minishell.h"
 
-void	init_prompt(t_list **envp)
+void	init_prompt(t_list **envp, char **ev)
 {
 	char	*prompt;
 
@@ -14,7 +14,7 @@ void	init_prompt(t_list **envp)
 			if (strncmp(prompt, "exit", 4) == 0)
 				break ;
 			add_history(prompt);
-			init_lexer(prompt, envp);
+			init_lexer(prompt, envp, ev);
 		}
 		else
 			break ;
@@ -43,7 +43,7 @@ int	main(int argc, char **argv, char **envp)
 	envp_lst = malloc(sizeof(t_list));
 	envp_lst = NULL;
 	list_envp(envp, &envp_lst);
-	init_prompt(&envp_lst);
+	init_prompt(&envp_lst, envp);
 	free_envp(&envp_lst);
 	system("leaks -q minishell");
 	return (0);

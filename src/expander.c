@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/16 18:19:15 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/17 19:30:14 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,9 +162,21 @@ void	retokenize(t_lexer **lexer, t_list **envp)
 
 void	full_path(t_lexer **lexer)
 {
-	if ((*lexer)->token_type == COMMAND)
+	t_lexer *tmp;
+
+	tmp = *lexer;
+	if (tmp->token_type == COMMAND)
 	{
-		if(ft_strncmp("/bin/", (*lexer)->content, 5) != 0)
-			(*lexer)->content = ft_strjoin("/bin/", (*lexer)->content);
+		if(ft_strncmp("/bin/", tmp->content, 5) != 0)
+			tmp->content = ft_strjoin("/bin/", tmp->content);
+	}
+	while(tmp != NULL)
+	{
+		if (tmp->token_type == PIPE)
+		{
+			tmp = tmp->next;
+			full_path(&tmp);
+		}
+		tmp = tmp->next;
 	}
 }
