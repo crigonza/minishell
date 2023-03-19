@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/19 12:09:21 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/19 19:27:00 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ typedef struct s_command
 	int					filein;
 	int					fileout;
 	int					fd[2];
+	int 				first_comm;
 }						t_command;
 
 //main.c
@@ -87,6 +88,7 @@ char					*set_command(char *command);
 //executer.c
 void					executer(char **command, char **envp);
 void					execute_pipe(t_command *command);
+void					execute(t_command *comm);
 //builtin.c
 void					is_builtin(t_command *command, t_list **envp);
 void					echo(char **command);

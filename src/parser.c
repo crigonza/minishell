@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/19 12:09:39 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/19 19:23:46 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	parser(t_lexer **lexer, t_list **envp)
 	command->envp = (*lexer)->envp;
 	command->filein = 0;
 	command->fileout = 0;
+	command->first_comm = 1;
 	command->command = malloc(sizeof(t_full_comm));
 	command->command = NULL;
 	parse_command(&command->command, lexer);

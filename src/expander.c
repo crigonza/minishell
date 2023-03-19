@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/17 19:30:14 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/19 18:47:33 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,8 +167,12 @@ void	full_path(t_lexer **lexer)
 	tmp = *lexer;
 	if (tmp->token_type == COMMAND)
 	{
-		if(ft_strncmp("/bin/", tmp->content, 5) != 0)
-			tmp->content = ft_strjoin("/bin/", tmp->content);
+		if(ft_strncmp("wc", tmp->content, 2) == 0)
+			tmp->content = ft_strjoin("/usr/bin/", tmp->content);
+		else{
+			if(ft_strncmp("/bin/", tmp->content, 5) != 0)
+				tmp->content = ft_strjoin("/bin/", tmp->content);
+		}
 	}
 	while(tmp != NULL)
 	{
