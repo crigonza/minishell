@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/19 11:04:27 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/21 12:54:51 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,9 @@ int	get_echo_string(t_lexer **lexer, char *prompt)
 	i = 0;
 	if (prompt[i] == 34)
 		return(i);
-		//i += get_string(lexer, &prompt[i + 1]);
 	else
 	{
-		while(prompt[i] && prompt[i] != '|')
+		while(prompt[i] && prompt[i] != '|' && prompt[i] != ';')
 			i++;
 		str = malloc(sizeof(i + 1));
 		ft_strlcpy(str, prompt, i + 1);
@@ -108,10 +107,15 @@ void	init_lexer(char *prompt, t_list **envp, char **ev)
 		if (ft_isprint(prompt[i]))
 			i += get_command(&lexer, &prompt[i]);
         if (prompt[i] == '|')
-			{
-		    add_token(&lexer, new_token("|", PIPE));
+		{
+			add_token(&lexer, new_token("|", PIPE));
 			i++;
-			}
+		}
+		if (prompt[i] == ';')
+		{
+			add_token(&lexer, new_token(";", SEMICOLON));
+			i++;
+		}
 	}
 	print_lexer(&lexer);
 	lexer->envp = ev;

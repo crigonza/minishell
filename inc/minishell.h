@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/19 19:27:00 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/21 12:58:54 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ typedef struct s_lexer
 typedef struct s_full_comm
 {
 	char				**command;
+	int					pipe_next;
+	int					semic_next;
 	struct s_full_comm	*next;
 }						t_full_comm;
 
@@ -60,6 +62,7 @@ typedef struct s_command
 //main.c
 int						main(int argc, char **argv, char **envp);
 void					init_prompt(t_list **envp, char **ev);
+void					exit_v(char *prompt);
 //lexer.c
 void					free_lexer(t_lexer **lexer);
 void					init_lexer(char *prompt, t_list **envp, char **ev);
@@ -95,6 +98,7 @@ void					echo(char **command);
 void					pwd(char **command);
 void					cd(char **command);
 void					env(t_list **envp, char **env);
+void					export(char **envp, char **command);
 //envp.c
 void					list_envp(char **envp, t_list **envp_lst);
 void					insert_env(t_list **envp, char **command);

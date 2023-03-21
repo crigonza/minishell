@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/19 20:07:21 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/21 09:54:53 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void is_builtin(t_command *comm, t_list **envp)
     else if(!ft_strncmp("/bin/env", com, ft_strlen(com)))
         env(envp, comm->command->command);
     else if(!ft_strncmp("/bin/export", com, ft_strlen(com)))
-        insert_env(envp, comm->command->command);
+        export(comm->envp, comm->command->command);
     else
         if(comm->command->next == NULL)
             executer(comm->command->command, comm->envp);
@@ -88,4 +88,39 @@ void env(t_list **envp, char **command)
     }
     else
        ft_putendl_fd("env: too many arguments", 2); 
+}
+
+void    export(char **envp, char **command)
+{
+    char **tmp_ev;
+    int equal;
+    int i;
+
+    i = 0;
+    equal = 0;
+    while(command[1][i])
+    {
+        if(command[1][i] == '=')
+            equal = 1;
+        i ++;
+    }
+    if(!equal)
+    {
+        write(1, "\n", 1);
+        //return(NULL);
+    }
+    else
+    {
+        tmp_ev = malloc(sizeof(i) + 2);
+        tmp_ev = envp;
+        tmp_ev[i + 1] = command[1];
+        tmp_ev[i + 2] = NULL;
+    }
+    i = 0;
+    while (tmp_ev[i])
+    {
+        printf("%s\n", tmp_ev[i]);
+        i++;
+    }
+    //return(tmp_ev);
 }

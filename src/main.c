@@ -12,13 +12,40 @@ void	init_prompt(t_list **envp, char **ev)
 		if (ft_strlen(prompt) > 0)
 		{
 			if (strncmp(prompt, "exit", 4) == 0)
-				break ;
+				exit_v(prompt);
 			add_history(prompt);
 			init_lexer(prompt, envp, ev);
 		}
 		else
-			break ;
+			break;
 	}
+}
+
+void exit_v(char *prompt)
+{
+	char *exit_arg;
+	int exit_val;
+	int i;
+
+	i = 0;
+	exit_val = 0;
+	exit_arg = ft_substr(prompt, 5, ft_strlen(prompt) - 4);
+	if (exit_arg[i] == '-')
+		i++;
+	while(exit_arg[i] && ft_isalnum(exit_arg[i]))
+		i++;
+	if (exit_arg[i] == '\0')
+		exit_val = ft_atoi(exit_arg);
+	if (exit_val < 0)
+	{
+		exit_val *= -1;
+		exit_val = exit_val % 256;
+		exit_val = 256 - exit_val;
+	}
+	else
+		exit_val = exit_val % 256;
+	free(exit_arg);
+	exit(exit_val);
 }
 
 void	free_envp(t_list **envp)
