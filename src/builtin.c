@@ -6,35 +6,34 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/21 09:54:53 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/23 12:57:44 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void is_builtin(t_command *comm, t_list **envp)
+void is_builtin(t_full_comm *comm, char **envp)
 {
     char *com;
     /* char **env_tmp;
 
     env_tmp = (*command)->envp; */
-    com = comm->command->command[0];
+    com = comm->command[0];
     if(!ft_strncmp("/bin/echo", com, ft_strlen(com)))
-        echo(comm->command->command);
+        echo(comm->command);
     else if(!ft_strncmp("/bin/pwd", com, ft_strlen(com)))
-        pwd(comm->command->command);
+        pwd(comm->command);
     else if(!ft_strncmp("/bin/cd", com, ft_strlen(com)))
-        cd(comm->command->command);
-    else if(!ft_strncmp("/bin/env", com, ft_strlen(com)))
-        env(envp, comm->command->command);
+        cd(comm->command);
+    /* else if(!ft_strncmp("/bin/env", com, ft_strlen(com)))
+        env(envp, comm->command);
     else if(!ft_strncmp("/bin/export", com, ft_strlen(com)))
-        export(comm->envp, comm->command->command);
+        export(envp, comm->command); */
     else
-        if(comm->command->next == NULL)
-            executer(comm->command->command, comm->envp);
-        else
-            execute_pipe(comm);
-
+        if(comm->next == NULL)
+            executer(comm->command, envp);
+       /*  else
+            execute(&comm->command, comm->envp); */
 }
 
 void echo(char **command)

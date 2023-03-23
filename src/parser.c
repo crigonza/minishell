@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/19 19:23:46 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/23 13:31:08 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,15 @@ void	add_command(t_full_comm **command, t_full_comm *new_command)
 	}
 }
 
-t_full_comm	*new_command(char **command)
+t_full_comm	*new_command(char **command, int pipe, int semic)
 {
 	t_full_comm	*new;
 
 	new = malloc(sizeof(t_full_comm));
 	new->command = command;
 	new->next = NULL;
+	new->pipe_next = pipe;
+	new->semic_next = semic;
 	return (new);
 }
 
@@ -63,7 +65,7 @@ int	get_count(t_lexer **lexer)
 
 	count = 0;
 	tmp = *lexer;
-	while (tmp != NULL && tmp->token_type != PIPE)
+	while (tmp != NULL && tmp->token_type != PIPE && tmp->token_type != SEMICOLON)
 	{
 		tmp = tmp->next;
 		count++;
@@ -79,12 +81,11 @@ void	parser(t_lexer **lexer, t_list **envp)
 	command->envp = (*lexer)->envp;
 	command->filein = 0;
 	command->fileout = 0;
-	command->first_comm = 1;
 	command->command = malloc(sizeof(t_full_comm));
 	command->command = NULL;
 	parse_command(&command->command, lexer);
 	print_command(&command->command);
-	is_builtin(command, envp);
+	execute(command);
 	free_command(&command->command);
 }
 
@@ -93,19 +94,27 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 	char **comm;
 	t_lexer *tmp;
 	int i;
+	int pipe;
+	int semic;
 
 	i = 0;
+	semic = 0;
+	pipe = 0;
 	tmp = *lexer;
 	comm = malloc(sizeof(char *) * (get_count(lexer) + 1));
 	comm[get_count(lexer)] = NULL;
-	while (tmp != NULL && tmp->token_type != PIPE)
+	while (tmp != NULL && tmp->token_type != PIPE && tmp->token_type != SEMICOLON)
 	{
 		comm[i] = tmp->content;
 		tmp = tmp->next;
 		i++;
 	}
-	add_command(command, new_command(comm));
-	if (tmp != NULL && tmp->token_type == PIPE)
+	if(tmp != NULL && tmp->token_type == PIPE)
+		pipe = 1;
+	else if(tmp != NULL && tmp->token_type == SEMICOLON)
+		semic = 1;
+	add_command(command, new_command(comm, pipe, semic));
+	if (tmp != NULL && (tmp->token_type == PIPE || tmp->token_type == SEMICOLON))
 	{
 		tmp = tmp->next;
 		parse_command(command, &tmp);

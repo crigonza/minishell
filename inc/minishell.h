@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/21 12:58:54 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/23 12:56:58 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <signal.h>
+# include <fcntl.h>
+
 
 typedef struct s_lexer
 {
@@ -86,14 +89,14 @@ void					parser(t_lexer **lexer, t_list **envp);
 void					parse_command(t_full_comm **command, t_lexer **lexer);
 void					add_command(t_full_comm **command, t_full_comm *new_command);
 void					free_command(t_full_comm **command);
-t_full_comm				*new_command(char **command);
+t_full_comm				*new_command(char **command, int pipe, int semic);
 char					*set_command(char *command);
 //executer.c
 void					executer(char **command, char **envp);
 void					execute_pipe(t_command *command);
 void					execute(t_command *comm);
 //builtin.c
-void					is_builtin(t_command *command, t_list **envp);
+void					is_builtin(t_full_comm *command, char **envp);
 void					echo(char **command);
 void					pwd(char **command);
 void					cd(char **command);

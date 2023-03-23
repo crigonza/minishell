@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 void	process_signal(int signum)
 {
@@ -6,7 +6,7 @@ void	process_signal(int signum)
     {
 		ft_putchar_fd('\n', 1);
         rl_on_new_line(); // LLama al prompt en una nueva linea
-	    rl_replace_line("", 0);  //limpia el texto previo
+	    //rl_replace_line("", 0);  //limpia el texto previo
 	    rl_redisplay(); // Cambia el contenido por el que tenga el buffer 
     }
 }
