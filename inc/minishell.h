@@ -48,7 +48,6 @@ typedef struct s_full_comm
 {
 	char				**command;
 	int					pipe_next;
-	int					semic_next;
 	struct s_full_comm	*next;
 }						t_full_comm;
 
@@ -58,9 +57,14 @@ typedef struct s_command
 	char				**envp;
 	int					filein;
 	int					fileout;
-	int					fd[2];
-	int 				first_comm;
 }						t_command;
+
+typedef struct s_ev
+{
+	char *key;
+	char *value;
+	struct s_ev *next;
+}		t_ev;
 
 //main.c
 int						main(int argc, char **argv, char **envp);

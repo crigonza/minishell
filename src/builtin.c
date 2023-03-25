@@ -33,6 +33,7 @@ int is_builtin(char *cmd)
 void builtin_exe(char **cmd, char **envp)
 {
     char *com;
+    int exit;
 
     com = cmd[0];
     if(!ft_strncmp("/bin/echo", com, ft_strlen(com)))

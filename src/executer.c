@@ -89,22 +89,31 @@ void first_child(char **cmd, char **envp, int *prpipe)
 	}
 }
 
-void inbuilt_pipe(char **cmd, char **envp, int *prpipe)
+void builtin_pipe(char **cmd, char **envp, int *prpipe)
 {
 	int fd[2];
+	pid_t pid;
 
 	pipe(fd);
-	close(fd[0]);
-	dup2(fd[1], STDOUT_FILENO);
-	close(fd[1]);
-	//dup2(*prpipe, STDIN_FILENO);
-	//close(*prpipe);
-	builtin_exe(cmd, envp);
-	//close(fd[1]);
-	//close (*prpipe);
-	//*prpipe = fd[0];
+	pid = fork();
+	if (pid == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		dup2(*prpipe, STDIN_FILENO);
+		close(*prpipe);
+		builtin_exe(cmd, envp);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		close(fd[1]);
+		close (*prpipe);
+		*prpipe = fd[0];
+		waitpid(-1, NULL, 0);
+	}
 }
-
 void last_child(char **cmd, char **envp, int prpipe)
 {
 	pid_t pid;
@@ -119,7 +128,8 @@ void last_child(char **cmd, char **envp, int prpipe)
 	else
 	{
 		close(prpipe);
-		while (wait(NULL) != -1);
+		waitpid(-1, NULL, 0);
+		//while (wait(NULL) != -1);
 	}
 }
 
@@ -146,10 +156,12 @@ void execute(t_command *cmd)
 				if(!is_builtin(tmp->command[0]))
 					first_child(tmp->command, cmd->envp, &prpipe);
 				else
-					inbuilt_pipe(tmp->command, cmd->envp, &prpipe);
+					builtin_pipe(tmp->command, cmd->envp, &prpipe);
 			}
 			else
 				last_child(tmp->command, cmd->envp, prpipe);
+			//while (wait(NULL) != -1);
+			//waitpid(-1, NULL, 0);
 			tmp = tmp->next;
 		}
 	}
