@@ -6,34 +6,45 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/23 12:57:44 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/24 21:10:54 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void is_builtin(t_full_comm *comm, char **envp)
+int is_builtin(char *cmd)
+{
+    if(!ft_strncmp("/bin/echo", cmd, ft_strlen(cmd)))
+        return(1);
+    else if(!ft_strncmp("/bin/pwd", cmd, ft_strlen(cmd)))
+        return(1);
+    else if(!ft_strncmp("/bin/cd", cmd, ft_strlen(cmd)))
+        return(1);
+    else if(!ft_strncmp("/bin/env", cmd, ft_strlen(cmd)))
+        return(1);
+    else if(!ft_strncmp("/bin/export", cmd, ft_strlen(cmd)))
+        return(1);
+    else if(!ft_strncmp("/bin/unset", cmd, ft_strlen(cmd)))
+        return(1);
+    else
+        return(0);
+}
+
+void builtin_exe(char **cmd, char **envp)
 {
     char *com;
-    /* char **env_tmp;
 
-    env_tmp = (*command)->envp; */
-    com = comm->command[0];
+    com = cmd[0];
     if(!ft_strncmp("/bin/echo", com, ft_strlen(com)))
-        echo(comm->command);
+        echo(cmd);
     else if(!ft_strncmp("/bin/pwd", com, ft_strlen(com)))
-        pwd(comm->command);
+        pwd(cmd);
     else if(!ft_strncmp("/bin/cd", com, ft_strlen(com)))
-        cd(comm->command);
+        cd(cmd);
     /* else if(!ft_strncmp("/bin/env", com, ft_strlen(com)))
         env(envp, comm->command);
     else if(!ft_strncmp("/bin/export", com, ft_strlen(com)))
         export(envp, comm->command); */
-    else
-        if(comm->next == NULL)
-            executer(comm->command, envp);
-       /*  else
-            execute(&comm->command, comm->envp); */
 }
 
 void echo(char **command)

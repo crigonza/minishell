@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/23 12:56:58 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/24 21:10:32 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,11 +92,12 @@ void					free_command(t_full_comm **command);
 t_full_comm				*new_command(char **command, int pipe, int semic);
 char					*set_command(char *command);
 //executer.c
-void					executer(char **command, char **envp);
+void					solo_cmd(char **command, char **envp);
 void					execute_pipe(t_command *command);
 void					execute(t_command *comm);
 //builtin.c
-void					is_builtin(t_full_comm *command, char **envp);
+int						is_builtin(char *cmd);
+void					builtin_exe(char **cmd, char **envp);
 void					echo(char **command);
 void					pwd(char **command);
 void					cd(char **command);

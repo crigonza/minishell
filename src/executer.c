@@ -6,13 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/23 13:46:44 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/25 08:37:36 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void executer(char **command, char **envp)
+void solo_cmd(char **command, char **envp)
 {
 	pid_t	pid;
 	int		val;
@@ -36,7 +36,7 @@ void executer(char **command, char **envp)
 
 }
 
-void	child_exe(char **command, char **envp, int *fd)
+/* void	child_exe(char **command, char **envp, int *fd)
 {
 	pid_t pid;
 	int res;
@@ -63,32 +63,96 @@ void	child_exe(char **command, char **envp, int *fd)
 		dup2(fd[0], STDIN_FILENO);
 		waitpid(pid, NULL, 0);
 	}
+} */
+
+void first_child(char **cmd, char **envp, int *prpipe)
+{
+	int fd[2];
+	pid_t pid;
+
+	pipe(fd);
+	pid = fork();
+	if (pid == 0)
+	{
+		close(fd[0]);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		dup2(*prpipe, STDIN_FILENO);
+		close(*prpipe);
+		execve(cmd[0], cmd, envp);
+	}
+	else
+	{
+		close(fd[1]);
+		close (*prpipe);
+		*prpipe = fd[0];
+	}
 }
 
-void execute(t_command *comm)
+void inbuilt_pipe(char **cmd, char **envp, int *prpipe)
 {
-	t_full_comm *tmp;
 	int fd[2];
 
-	tmp = comm->command;
-	if(pipe(fd) == -1)
+	pipe(fd);
+	close(fd[0]);
+	dup2(fd[1], STDOUT_FILENO);
+	close(fd[1]);
+	//dup2(*prpipe, STDIN_FILENO);
+	//close(*prpipe);
+	builtin_exe(cmd, envp);
+	//close(fd[1]);
+	//close (*prpipe);
+	//*prpipe = fd[0];
+}
+
+void last_child(char **cmd, char **envp, int prpipe)
+{
+	pid_t pid;
+
+	pid = fork();
+	if(pid == 0)
 	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
+		dup2 (prpipe, STDIN_FILENO);
+		close(prpipe);
+		execve(cmd[0], cmd, envp);
 	}
-	while (tmp != NULL)
+	else
 	{
-		if (tmp->pipe_next == 1)
-			child_exe(tmp->command, comm->envp, fd);
-		else if (tmp->semic_next == 1)
-			is_builtin(tmp, comm->envp);
-		else	
-			is_builtin(tmp, comm->envp);
-		tmp = tmp->next;
+		close(prpipe);
+		while (wait(NULL) != -1);
 	}
-	/* close(fd[0]);
-	close(fd[1]); */
-	//executer(tmp->command, envp);
+}
+
+void execute(t_command *cmd)
+{
+	t_full_comm *tmp;
+	int prpipe;
+
+	prpipe = dup(0);
+	tmp = cmd->command;
+	if(tmp->next == NULL)
+	{
+		if(!is_builtin(tmp->command[0]))
+			solo_cmd(tmp->command, cmd->envp);
+		else
+			builtin_exe(tmp->command, cmd->envp);
+	}
+	else
+	{
+		while (tmp != NULL)
+		{
+			if (tmp->pipe_next == 1)
+			{
+				if(!is_builtin(tmp->command[0]))
+					first_child(tmp->command, cmd->envp, &prpipe);
+				else
+					inbuilt_pipe(tmp->command, cmd->envp, &prpipe);
+			}
+			else
+				last_child(tmp->command, cmd->envp, prpipe);
+			tmp = tmp->next;
+		}
+	}
 }
 
 /* void execute_pipe(t_command *comm)
