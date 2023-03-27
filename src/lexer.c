@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/23 12:00:43 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/26 20:31:04 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,7 @@ int	get_command(t_lexer **lexer, char *prompt)
 		i++;
 	str = malloc(sizeof(i + 1));
 	ft_strlcpy(str, prompt, i + 1);
-	if (prompt[i] == '/')
-		add_token(lexer, new_token(str, PATH));
-	else
-		add_token(lexer, new_token(str, COMMAND));
+	add_token(lexer, new_token(str, COMMAND));
 	if (!ft_strncmp(str, "echo", 4))
 	{
 		while(prompt[i] == ' ' || prompt[i] == '\t')
@@ -86,7 +83,7 @@ int	get_command(t_lexer **lexer, char *prompt)
 }
 
 
-void	init_lexer(char *prompt, t_list **envp, char **ev)
+void	init_lexer(char *prompt, t_ev **envp)
 {
 	int		i;
 	t_lexer	*lexer;
@@ -118,7 +115,6 @@ void	init_lexer(char *prompt, t_list **envp, char **ev)
 		}
 	}
 	print_lexer(&lexer);
-	lexer->envp = ev;
 	retokenize(&lexer, envp);
 	free_lexer(&lexer);
 	//free(lexer);

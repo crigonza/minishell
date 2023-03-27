@@ -6,51 +6,19 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/23 10:58:59 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/27 21:08:46 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-char	*get_envp_2(char *content, char *expanded)
-{
-	char	*tmp;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	while (content[i] != '$')
-		i++;
-	i++;
-	while ((content[i] >= 'A' && content[i] <= 'Z') || content[i] == '('
-		|| content[i] == ')')
-		i++;
-	if (!content[i])
-		return (expanded);
-	else
-	{
-		while (content[i])
-		{
-			i++;
-			j++;
-		}
-		tmp = malloc(sizeof(j + 1));
-		ft_strlcpy(tmp, &content[i - j], j + 1);
-		expanded = ft_strjoin(expanded, tmp);
-		return (expanded);
-	}
-}
-char	*get_envp(char *content, t_list **envp)
+char	*expand_envp(char *content, char *key, char *value)
 {
 	int		i;
-	char	*key;
-	char	*value;
 	char	*expanded;
+	char	*back;
 
 	i = 0;
-	key = get_envp_key(content);
-	value = get_envp_value(envp, key);
 	if (content[i] != '$')
 	{
 		while (content[i] != '$')
@@ -61,55 +29,32 @@ char	*get_envp(char *content, t_list **envp)
 	}
 	else
 		expanded = value;
-	expanded = get_envp_2(content, expanded);
-	//printf("%s----%d\n", expanded, i);
+	back = ft_strnstr(content, key, ft_strlen(content)) + ft_strlen(key);
+	expanded = ft_strjoin(expanded, back);
 	return (expanded);
 }
 
-char	*get_envp_key(char *content)
+char	*get_envp(t_ev **env, char *content)
 {
-	char	*envp_key;
-	int		i;
-	int		j;
+	char	*var;
+	char	*expanded;
+	t_ev	*tmp;
 
-	i = 0;
-	j = 0;
-	while (content[i] != '$')
-		i++;
-	if (content[i + 1] == '(')
-		i += 2;
-	else
-		i++;
-	while (content[i] >= 'A' && content[i] <= 'Z')
+	tmp = *env;
+	var = ft_strchr(content, '$') + 1;
+	while(tmp != NULL)
 	{
-		i++;
-		j++;
+		if(!ft_strncmp(tmp->key, var, ft_strlen(tmp->key)))
+		{
+			expanded = expand_envp(content, tmp->key, tmp->value);
+			break;
+		}
+		tmp = tmp->next;
 	}
-	envp_key = malloc(sizeof(j + 1));
-	ft_strlcpy(envp_key, &content[i - j], j + 1);
-	return (envp_key);
+	return (expanded);
 }
 
-char	*get_envp_value(t_list **envp, char *search)
-{
-	char	*value;
-	char	*tmp;
-	t_list 	*aux;
-
-	aux = *envp;
-	while (aux != NULL)
-	{
-		if (!ft_strncmp(aux->content, search, ft_strlen(search)))
-			break ;
-		aux = aux->next;
-	}
-	tmp = ft_strchr(aux->content, '=') + 1;
-	value = malloc(sizeof(ft_strlen(tmp) + 1));
-	ft_strlcpy(value, tmp, ft_strlen(tmp) + 1);
-	return (value);
-}
-
-void	expander(t_lexer **lexer, t_list **envp)
+void	expander(t_lexer **lexer, t_ev **envp)
 {
 	t_lexer	*tmp;
 	int		i;
@@ -122,7 +67,7 @@ void	expander(t_lexer **lexer, t_list **envp)
 		{
 			if (tmp->content[i] == '$')
 			{
-				tmp->content = get_envp(tmp->content, envp);
+				tmp->content = get_envp(envp, tmp->content);
 			}
 			i++;
 		}
@@ -133,7 +78,7 @@ void	expander(t_lexer **lexer, t_list **envp)
 	parser(lexer, envp);
 }
 
-void	retokenize(t_lexer **lexer, t_list **envp)
+void	retokenize(t_lexer **lexer, t_ev **envp)
 {
 	t_lexer	*tmp;
 	int		i;
@@ -146,8 +91,6 @@ void	retokenize(t_lexer **lexer, t_list **envp)
 		{
 			while (tmp->content[i])
 			{
-				if (tmp->content[i] == '/')
-					tmp->token_type = PATH;
 				if (tmp->content[i] == '$')
 					tmp->token_type = STRING;
 				i++;
@@ -156,31 +99,77 @@ void	retokenize(t_lexer **lexer, t_list **envp)
 		tmp = tmp->next;
 	}
 	free(tmp);
-	full_path(lexer);
+	full_path(lexer, envp);
 	expander(lexer, envp);
 }
 
-void	full_path(t_lexer **lexer)
+char	*get_path(t_ev **env)
 {
-	t_lexer *tmp;
+	t_ev *tmp;
 
-	tmp = *lexer;
-	if (tmp->token_type == COMMAND)
-	{
-		if(ft_strncmp("wc", tmp->content, 2) == 0)
-			tmp->content = ft_strjoin("/usr/bin/", tmp->content);
-		else{
-			if(ft_strncmp("/bin/", tmp->content, 5) != 0)
-				tmp->content = ft_strjoin("/bin/", tmp->content);
-		}
-	}
+	tmp = *env;
 	while(tmp != NULL)
 	{
-		if (tmp->token_type == PIPE || tmp->token_type == SEMICOLON)
-		{
-			tmp = tmp->next;
-			full_path(&tmp);
-		}
+		if(!ft_strncmp(tmp->key, "PATH", 4))
+			break;
 		tmp = tmp->next;
+	}
+	if(tmp == NULL)
+		return(NULL);
+	return(tmp->value);
+}
+
+void	get_full_path(char **path, t_lexer *lex)
+{
+	int 	i;
+	char *aux;
+
+	i = 0;
+	if(lex->token_type == COMMAND && !is_builtin(lex->content))
+	{
+		while(path[i])
+		{
+			path[i] = ft_strjoin(path[i], "/");
+			aux = ft_strjoin(path[i], lex->content);
+			if(!access(aux, X_OK))
+			{
+				free(lex->content);
+				lex->content = aux;
+				break;
+			}
+			i++;
+		}
+	}
+}
+
+void	full_path(t_lexer **lexer, t_ev **env)
+{
+	t_lexer	*tmp;
+	char	*path;
+	char	**split_path;
+	int		i;
+
+	i = 0;
+	tmp = *lexer;
+	path = get_path(env);
+	if(path != NULL)
+	{
+		split_path = ft_split(path, ':');
+		get_full_path(split_path, tmp);
+		while(split_path[i])
+		{
+			free(split_path[i]);
+			i++;
+		}
+		free(split_path);
+		while(tmp != NULL)
+		{
+			if (tmp->token_type == PIPE || tmp->token_type == SEMICOLON)
+			{
+				tmp = tmp->next;
+				full_path(&tmp, env);
+			}
+			tmp = tmp->next;
+		}
 	}
 }

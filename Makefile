@@ -6,12 +6,12 @@
 #    By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 21:13:04 by crigonza          #+#    #+#              #
-#    Updated: 2023/03/15 17:40:21 by crigonza         ###   ########.fr        #
+#    Updated: 2023/03/25 19:42:05 by crigonza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
-CC		= gcc -lreadline
+CC		= gcc -lreadline -I/opt/homebrew/opt/readline/include
 CFLAGS	= 
 LIBFT	= ./libft
 

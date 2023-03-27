@@ -1,27 +1,31 @@
 #include "../inc/minishell.h"
 
-void	init_prompt(t_list **envp, char **ev)
+int	init_prompt(t_ev **env)
 {
 	char	*prompt;
+	int		exit_val;
 
+	exit_val = 0;
 	while (1)
 	{
-		prompt = readline("\e[34m"
-							"MiniShell$>"
-							"\x1b[m");
+		prompt = readline("\e[34m""MiniShell$>""\x1b[m");
 		if (ft_strlen(prompt) > 0)
 		{
 			if (strncmp(prompt, "exit", 4) == 0)
-				exit_v(prompt);
+			{
+				exit_val = exit_v(prompt);
+				break;
+			}
 			add_history(prompt);
-			init_lexer(prompt, envp, ev);
+			init_lexer(prompt, env);
 		}
 		else
 			break;
 	}
+	return(exit_val);
 }
 
-void exit_v(char *prompt)
+int exit_v(char *prompt)
 {
 	char *exit_arg;
 	int exit_val;
@@ -45,33 +49,36 @@ void exit_v(char *prompt)
 	else
 		exit_val = exit_val % 256;
 	free(exit_arg);
-	exit(exit_val);
+	return(exit_val);
 }
 
-void	free_envp(t_list **envp)
+void	free_envp(t_ev **env)
 {
-	t_list	*tmp;
+	t_ev	*tmp;
 
-	while ((*envp) != NULL)
+	while ((*env) != NULL)
 	{
-		tmp = (*envp);
-		(*envp) = (*envp)->next;
+		tmp = (*env);
+		(*env) = (*env)->next;
+		free(tmp->key);
+		free(tmp->value);
 		free(tmp);
 	}
 }
 
-
 int	main(int argc, char **argv, char **envp)
 {
-	t_list	*envp_lst;
+	t_ev	*env;
+	int		exval;
 
 	(void)argc;
 	(void)argv;
-	envp_lst = malloc(sizeof(t_list));
-	envp_lst = NULL;
-	list_envp(envp, &envp_lst);
-	init_prompt(&envp_lst, envp);
-	free_envp(&envp_lst);
+	env = malloc(sizeof(t_ev));
+	env = NULL;
+	set_envp(envp, &env);
+	exval = init_prompt(&env);
+	free_envp(&env);
+	//rl_clear_history();
 	system("leaks -q minishell");
-	return (0);
+	exit (exval);
 }
