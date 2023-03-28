@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/27 19:15:09 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/28 10:12:57 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void last_child(char **cmd, char **envp, int prpipe)
 	else
 	{
 		close(prpipe);
-		//waitpid(-1, NULL, 0);
 		while (wait(NULL) != -1);
 	}
 }

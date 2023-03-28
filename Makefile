@@ -6,13 +6,14 @@
 #    By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 21:13:04 by crigonza          #+#    #+#              #
-#    Updated: 2023/03/25 19:42:05 by crigonza         ###   ########.fr        #
+#    Updated: 2023/03/28 11:13:49 by crigonza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
-CC		= gcc -lreadline -I/opt/homebrew/opt/readline/include
-CFLAGS	= 
+CC		= gcc -lreadline
+CFLAGS	= -I /users/$(USER)/.brew/opt/readline/include
+FTFLGS = -lreadline -L /users/$(USER)/.brew/opt/readline/lib
 LIBFT	= ./libft
 
 HEADERS = -I ./inc
@@ -26,7 +27,7 @@ libft:
 	@$(MAKE) -C $(LIBFT)
 
 %.0: &.C
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+	@$(CC) $(CFLAGS)  $(FTFLGS) -o $@ -c $< $(HEADERS)
 
 $(NAME) : $(OBJS)
 	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)

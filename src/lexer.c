@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/26 20:31:04 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/28 10:52:43 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,21 @@ int	get_string(t_lexer **lexer, char *prompt)
 	free(str);
 	return (i + 2);
 }
+int close_quotes(char *prompt)
+{
+	int quote;
+	int i;
+
+	i = 1;
+	quote = 0;
+	while(prompt[i])
+	{
+		if(prompt[i] == 34)
+			quote = 1;
+		i++;
+	}
+	return(quote);
+}
 
 int	get_echo_string(t_lexer **lexer, char *prompt)
 {
@@ -46,12 +61,20 @@ int	get_echo_string(t_lexer **lexer, char *prompt)
 	char *str;
 
 	i = 0;
-	if (prompt[i] == 34)
+	if (prompt[i] == 34 && close_quotes(&prompt[i]) == 1)
+	{
 		return(i);
+	}
 	else
 	{
 		while(prompt[i] && prompt[i] != '|' && prompt[i] != ';')
 			i++;
+		if(prompt[i] == '|' && prompt[i - 1] == ' ')
+		{
+			i--;
+			while(prompt[i - 1] == ' ')
+				i--;
+		}
 		str = malloc(sizeof(i + 1));
 		ft_strlcpy(str, prompt, i + 1);
 		add_token(lexer, new_token(str, STRING));
@@ -93,12 +116,8 @@ void	init_lexer(char *prompt, t_ev **envp)
 	lexer = NULL;
 	while (prompt[i] != '\0')
 	{
-		while(prompt[i] == ' ' || prompt[i] == '\t' || prompt[i] == '|')
-		{
-			if (prompt[i] == '|')
-		    	add_token(&lexer, new_token("|", PIPE));
-            i++;
-		}
+		while(prompt[i] == ' ' || prompt[i] == '\t')
+			i++;
 		if (prompt[i] == 34)
 			i += get_string(&lexer, &prompt[i + 1]);
 		if (ft_isprint(prompt[i]))
@@ -115,7 +134,8 @@ void	init_lexer(char *prompt, t_ev **envp)
 		}
 	}
 	print_lexer(&lexer);
-	retokenize(&lexer, envp);
+	if(lexer != NULL)
+		retokenize(&lexer, envp);
 	free_lexer(&lexer);
 	//free(lexer);
 }

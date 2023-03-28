@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 11:35:20 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/27 19:16:13 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/28 10:23:10 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void    free_env_array(char **env)
 char **convert_envp(t_ev **env)
 {
     char    **envp;
+    char    *aux;
     t_ev    *tmp;
     int     i;
 
@@ -77,9 +78,10 @@ char **convert_envp(t_ev **env)
     i = 0;
     while(tmp != NULL)
     {
-        envp[i] = ft_strjoin(tmp->key, "=");
-        envp[i] = ft_strjoin(envp[i], tmp->value);
+        aux = ft_strjoin(tmp->key, "=");
+        envp[i] = ft_strjoin(aux, tmp->value);
         tmp = tmp->next;
+        free(aux);
         i++;
     }
     envp[i] = NULL;
@@ -89,6 +91,7 @@ char **convert_envp(t_ev **env)
 void  set_envp(char **envp, t_ev **env)
 {
     int i;
+    int j;
     char **vars;
 
     i = 0;
@@ -96,8 +99,12 @@ void  set_envp(char **envp, t_ev **env)
     {
         vars = ft_split(envp[i], '=');
         add_ev(env, new_ev(vars[0], vars[1]));
-        free(vars[0]);
-        free(vars[1]);
+        j = 0;
+        while (vars[j])
+        {
+            free(vars[j]);
+            j++;
+        }
         free(vars);
         i++;
     }
