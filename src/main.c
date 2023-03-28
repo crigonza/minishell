@@ -6,13 +6,11 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:11:13 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/28 11:14:54 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/28 11:45:31 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-#include <readline/readline.h>
-#include <readline/history.h>
 
 int	init_prompt(t_ev **env)
 {

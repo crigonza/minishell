@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/28 10:52:43 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/28 12:16:36 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,22 @@ int close_quotes(char *prompt)
 	return(quote);
 }
 
+int	check_echo_opt(t_lexer **lexer, char *prompt)
+{
+	int i;
+
+	i = 2;
+	if (!ft_strncmp(prompt, "-n", 2) && prompt[i] == ' ')
+	{
+		add_token(lexer, new_token("-n", COMMAND));
+		while(prompt[i] == ' ' || prompt[i] == '\t')
+			i++;
+		return(i);	
+	}
+	else
+		return(0);
+}
+
 int	get_echo_string(t_lexer **lexer, char *prompt)
 {
 	int	i;
@@ -99,6 +115,7 @@ int	get_command(t_lexer **lexer, char *prompt)
 	{
 		while(prompt[i] == ' ' || prompt[i] == '\t')
 		i++;
+		i += check_echo_opt(lexer, &prompt[i]);
 		i += get_echo_string(lexer, &prompt[i]);
 	}
 	free(str);
