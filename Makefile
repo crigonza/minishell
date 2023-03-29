@@ -1,18 +1,23 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
+#    Makefile_casa                                      :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 21:13:04 by crigonza          #+#    #+#              #
-#    Updated: 2023/03/28 13:12:08 by crigonza         ###   ########.fr        #
+#    Updated: 2023/03/29 17:17:37 by crigonza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
-CC		= gcc -lreadline -I/users/$(USER)/.brew/opt/readline/include -L/users/$(USER)/.brew/opt/readline/lib
+CC		= gcc
 CFLAGS	=
+L_FLAGS = -lreadline
+LDFLAGS= -L/opt/homebrew/opt/readline/lib 
+CPPFLAGS= -I/opt/homebrew/opt/readline/include
+/* LDFLAGS		= -L/Users/$(USER)/.brew/opt/readline/lib */
+/* CPPFLAGS	= -I/Users/$(USER)/.brew/opt/readline/include */
 LIBFT	= ./libft
 
 HEADERS = -I ./inc
@@ -26,10 +31,10 @@ libft:
 	@$(MAKE) -C $(LIBFT)
 
 %.o: &.c
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS)
+	@$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $< $(HEADERS)
 
 $(NAME) : $(OBJS)
-	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	@$(CC) $(OBJS) $(LDFLAGS) $(CPPFLAGS) $(LIBS) $(HEADERS) -o $(NAME) $(L_FLAGS)
 
 clean:
 	@rm -f $(OBJS)

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/28 13:02:52 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/29 20:58:18 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,10 @@ t_full_comm	*new_command(char **command, int pipe)
 	new->command = command;
 	new->next = NULL;
 	new->pipe_next = pipe;
+	new->filein = NULL;
+	new->fileout = NULL;
+	new->fdin = 0;
+	new->fdout = 1;
 	return (new);
 }
 
@@ -77,8 +81,6 @@ void	parser(t_lexer **lexer, t_ev **envp)
 	t_command	*command;
 
 	command = malloc(sizeof(t_command));
-	command->filein = 0;
-	command->fileout = 0;
 	command->command = malloc(sizeof(t_full_comm));
 	command->command = NULL;
 	command->env = envp;

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/27 21:09:35 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/29 21:10:20 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,10 @@ typedef struct s_full_comm
 {
 	char				**command;
 	int					pipe_next;
+	char				*filein;
+	char				*fileout;
+	int					fdin;
+	int					fdout;
 	struct s_full_comm	*next;
 }						t_full_comm;
 
@@ -50,8 +54,6 @@ typedef struct s_command
 {
 	struct s_full_comm	*command;
 	struct s_ev			**env;
-	int					filein;
-	int					fileout;
 }						t_command;
 
 typedef struct s_ev
@@ -96,7 +98,7 @@ char					*set_command(char *command);
 void					first_child(char **cmd, char **envp, int *prpipe);
 void					last_child(char **cmd, char **envp, int prpipe);
 void					exe_init(t_command *cmd);
-void					solo_cmd(char **command, char **envp);
+void					solo_cmd(t_full_comm *cmd, char **envp);
 void					execute(t_command *comm, char **env);
 //builtin_utils.c
 int						is_builtin(char *cmd);

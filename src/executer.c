@@ -6,13 +6,61 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/28 10:12:57 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/03/29 21:36:18 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void solo_cmd(char **command, char **envp)
+void	check_redir(t_full_comm *cmd)
+{
+    int i;
+
+	i = 0;
+    while (cmd->command[i]) 
+	{
+        if (!ft_strncmp(cmd->command[i], ">", 1))
+		{
+            cmd->fileout = cmd->command[i + 1];
+            cmd->fdout = open(cmd->fileout, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+			if(cmd->fdout == -1)
+			{
+                perror("open");
+                exit(EXIT_FAILURE);
+            }
+            cmd->command[i] = NULL;
+        }
+		else if(!ft_strncmp(cmd->command[i], "<", 1))
+		{
+			cmd->filein = cmd->command[i + 1];
+			printf("%s\n", cmd->filein);
+			cmd->fdin = open(cmd->filein, O_RDONLY);
+			if (cmd->fdin == -1)
+			{
+                perror("open");
+                exit(EXIT_FAILURE);
+            }
+            cmd->command[i] = NULL;
+		}
+        i++;
+    }
+}
+
+void redir_solo_cmd(t_full_comm *cmd)
+{
+	if(cmd->fdin != STDIN_FILENO)
+	{
+		dup2(cmd->fdin, STDIN_FILENO);
+		close(cmd->fdin);
+	}
+	if(cmd->fdout != STDOUT_FILENO)
+	{
+		dup2(cmd->fdout, STDOUT_FILENO);
+		close(cmd->fdout);
+	}
+}
+
+void solo_cmd(t_full_comm *cmd, char **envp)
 {
 	pid_t	pid;
 	int		val;
@@ -21,10 +69,13 @@ void solo_cmd(char **command, char **envp)
 	if(pid < 0)
 			perror("Error");
 	else if (pid > 0)
+	{
 		waitpid(pid, NULL, 0);
+	}
 	else if (pid == 0)
 	{
-		val = execve(command[0], command, NULL);
+		redir_solo_cmd(cmd);
+		val = execve(cmd->command[0], cmd->command, NULL);
 		if (val == -1)
 		{
 			perror("Error");
@@ -33,7 +84,6 @@ void solo_cmd(char **command, char **envp)
 		else 
 			exit(EXIT_SUCCESS);
 	}
-
 }
 
 void first_child(char **cmd, char **envp, int *prpipe)
@@ -88,7 +138,10 @@ void exe_init(t_command *cmd)
 	if(tmp->next == NULL)
 	{
 		if(!is_builtin(tmp->command[0]))
-			solo_cmd(tmp->command, env);
+		{
+			check_redir(tmp);
+			solo_cmd(tmp, env);
+		}
 		else
 			builtin_exe(tmp->command, cmd->env);
 		free_env_array(env);
