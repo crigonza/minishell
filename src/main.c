@@ -21,6 +21,12 @@ int	init_prompt(t_ev **env)
 	while (1)
 	{
 		prompt = readline("\e[34m""MiniShell$>""\x1b[m");
+		 if (!prompt)
+        {
+            printf("exit\n");  // CTRL + D
+            exit(-1);
+        }
+		config_signals();
 		if (ft_strlen(prompt) > 0)
 		{
 			if (strncmp(prompt, "exit", 4) == 0)
@@ -30,8 +36,9 @@ int	init_prompt(t_ev **env)
 			}
 			add_history(prompt);
 			init_lexer(prompt, env);
-		}
+		}	  
 	}
+	
 	return(exit_val);
 }
 
