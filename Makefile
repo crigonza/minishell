@@ -14,10 +14,10 @@ NAME	= minishell
 CC		= gcc
 CFLAGS	=
 L_FLAGS = -lreadline
-LDFLAGS= -L/opt/homebrew/opt/readline/lib 
-CPPFLAGS= -I/opt/homebrew/opt/readline/include
-/* LDFLAGS		= -L/Users/$(USER)/.brew/opt/readline/lib */
-/* CPPFLAGS	= -I/Users/$(USER)/.brew/opt/readline/include */
+/* LDFLAGS= -L/opt/homebrew/opt/readline/lib */
+/* CPPFLAGS= -I/opt/homebrew/opt/readline/include*/
+LDFLAGS		= -L/Users/$(USER)/.brew/opt/readline/lib
+CPPFLAGS	= -I/Users/$(USER)/.brew/opt/readline/include 
 LIBFT	= ./libft
 
 HEADERS = -I ./inc

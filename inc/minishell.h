@@ -16,8 +16,6 @@
 # include "../Libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
-//#include "/opt/homebrew/opt/readline/include/readline/readline.h"
-//#include "/opt/homebrew/opt/readline/include/readline/history.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>
@@ -121,5 +119,8 @@ void					add_ev(t_ev **env, t_ev *new);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_full_comm **command);
+//signal.c
+void					process_signal(int signum);
+void					config_signals(void);
 
 #endif
