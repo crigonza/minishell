@@ -20,13 +20,13 @@ int	init_prompt(t_ev **env)
 	exit_val = 0;
 	while (1)
 	{
+		config_signals();
 		prompt = readline("\e[34m""MiniShell$>""\x1b[m");
 		 if (!prompt)
         {
             printf("exit\n");  // CTRL + D
             exit(-1);
         }
-		config_signals();
 		if (ft_strlen(prompt) > 0)
 		{
 			if (strncmp(prompt, "exit", 4) == 0)
