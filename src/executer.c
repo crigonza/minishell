@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/29 21:36:18 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/11 13:09:37 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	check_redir(t_full_comm *cmd)
 		else if(!ft_strncmp(cmd->command[i], "<", 1))
 		{
 			cmd->filein = cmd->command[i + 1];
-			printf("%s\n", cmd->filein);
 			cmd->fdin = open(cmd->filein, O_RDONLY);
 			if (cmd->fdin == -1)
 			{
@@ -143,13 +142,32 @@ void exe_init(t_command *cmd)
 			solo_cmd(tmp, env);
 		}
 		else
-			builtin_exe(tmp->command, cmd->env);
+		{
+			check_redir(tmp);
+			builtin_exe(tmp, cmd->env);
+		}
 		free_env_array(env);
 	}
 	else
 		execute(cmd, env);
 }
 
+void semic_exec(t_command *cmd, char **env)
+{
+	t_full_comm *tmp;
+
+	tmp = cmd->command;
+	if(!is_builtin(tmp->command[0]))
+	{
+		check_redir(tmp);
+		solo_cmd(tmp, env);
+	}
+	else
+	{
+		check_redir(tmp);
+		builtin_exe(tmp, cmd->env);
+	}
+}
 void execute(t_command *cmd, char **env)
 {
 	t_full_comm *tmp;
@@ -165,9 +183,23 @@ void execute(t_command *cmd, char **env)
 			if(!is_builtin(tmp->command[0]))
 				first_child(tmp->command, env, &prpipe);
 			else
-				builtin_pipe(tmp->command, cmd->env, &prpipe);
+				builtin_pipe(tmp, cmd->env, &prpipe);
 		}
+		else if (tmp->semic_next == 1)
+			semic_exec(cmd, env);
 		else
+		/* {
+			if(!is_builtin(tmp->command[0]))
+			{
+				check_redir(tmp);
+				solo_cmd(tmp, env);
+			}
+			else
+			{
+				check_redir(tmp);
+				builtin_exe(tmp, cmd->env);
+			}
+		} */
 			last_child(tmp->command, env, prpipe);
 		while (wait(NULL) != -1);
 		tmp = tmp->next;

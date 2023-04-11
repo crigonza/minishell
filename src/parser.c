@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/29 20:58:18 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/11 13:10:55 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	add_command(t_full_comm **command, t_full_comm *new_command)
 	}
 }
 
-t_full_comm	*new_command(char **command, int pipe)
+t_full_comm	*new_command(char **command, int pipe, int semic)
 {
 	t_full_comm	*new;
 
@@ -54,6 +54,7 @@ t_full_comm	*new_command(char **command, int pipe)
 	new->command = command;
 	new->next = NULL;
 	new->pipe_next = pipe;
+	new->semic_next = semic;
 	new->filein = NULL;
 	new->fileout = NULL;
 	new->fdin = 0;
@@ -96,9 +97,11 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 	t_lexer *tmp;
 	int i;
 	int pipe;
+	int semic;
 
 	i = 0;
 	pipe = 0;
+	semic = 0;
 	tmp = *lexer;
 	comm = malloc(sizeof(char *) * (get_count(lexer) + 1));
 	comm[get_count(lexer)] = NULL;
@@ -110,7 +113,9 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 	}
 	if(tmp != NULL && tmp->token_type == PIPE)
 		pipe = 1;
-	add_command(command, new_command(comm, pipe));
+	if(tmp != NULL && tmp->token_type == SEMICOLON)
+		semic = 1;
+	add_command(command, new_command(comm, pipe, semic));
 	if (tmp != NULL && (tmp->token_type == PIPE || tmp->token_type == SEMICOLON))
 	{
 		tmp = tmp->next;

@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile_casa                                      :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 21:13:04 by crigonza          #+#    #+#              #
-#    Updated: 2023/03/29 17:17:37 by crigonza         ###   ########.fr        #
+#    Updated: 2023/04/11 10:35:28 by crigonza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,9 @@ CC		= gcc
 CFLAGS	=
 L_FLAGS = -lreadline
 /* LDFLAGS= -L/opt/homebrew/opt/readline/lib */
-/* CPPFLAGS= -I/opt/homebrew/opt/readline/include*/
+/* CPPFLAGS= -I/opt/homebrew/opt/readline/include */
 LDFLAGS		= -L/Users/$(USER)/.brew/opt/readline/lib
-CPPFLAGS	= -I/Users/$(USER)/.brew/opt/readline/include 
+CPPFLAGS	= -I/Users/$(USER)/.brew/opt/readline/include
 LIBFT	= ./libft
 
 HEADERS = -I ./inc

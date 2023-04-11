@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/27 21:08:46 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/11 12:21:31 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,11 @@ char	*get_envp(t_ev **env, char *content)
 		if(!ft_strncmp(tmp->key, var, ft_strlen(tmp->key)))
 		{
 			expanded = expand_envp(content, tmp->key, tmp->value);
-			break;
+			return(expanded);
 		}
 		tmp = tmp->next;
 	}
+	expanded = content;
 	return (expanded);
 }
 

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/28 12:16:36 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/11 11:49:58 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ int	get_echo_string(t_lexer **lexer, char *prompt)
 	}
 	else
 	{
-		while(prompt[i] && prompt[i] != '|' && prompt[i] != ';')
+		while(prompt[i] && prompt[i] != '|' && prompt[i] != ';' && prompt[i] != '>')
 			i++;
 		if(prompt[i] == '|' && prompt[i - 1] == ' ')
 		{
@@ -137,7 +137,7 @@ void	init_lexer(char *prompt, t_ev **envp)
 			i++;
 		if (prompt[i] == 34)
 			i += get_string(&lexer, &prompt[i + 1]);
-		if (ft_isprint(prompt[i]))
+		if (ft_isprint(prompt[i]) && prompt[i] != '|' && prompt[i] != ';')
 			i += get_command(&lexer, &prompt[i]);
         if (prompt[i] == '|')
 		{

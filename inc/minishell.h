@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/29 21:10:20 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/11 13:09:04 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ typedef struct s_full_comm
 {
 	char				**command;
 	int					pipe_next;
+	int					semic_next;
 	char				*filein;
 	char				*fileout;
 	int					fdin;
@@ -90,18 +91,19 @@ void					parser(t_lexer **lexer, t_ev **envp);
 void					parse_command(t_full_comm **command, t_lexer **lexer);
 void					add_command(t_full_comm **command, t_full_comm *new_command);
 void					free_command(t_full_comm **command);
-t_full_comm				*new_command(char **command, int pipe);
+t_full_comm				*new_command(char **command, int pipe, int semic);
 char					*set_command(char *command);
 //executer.c
 void					first_child(char **cmd, char **envp, int *prpipe);
 void					last_child(char **cmd, char **envp, int prpipe);
 void					exe_init(t_command *cmd);
 void					solo_cmd(t_full_comm *cmd, char **envp);
+void					redir_solo_cmd(t_full_comm *cmd);
 void					execute(t_command *comm, char **env);
 //builtin_utils.c
 int						is_builtin(char *cmd);
-void					builtin_exe(char **cmd, t_ev **envp);
-void					builtin_pipe(char **cmd, t_ev **envp, int *prpipe);
+void					builtin_exe(t_full_comm *cmd, t_ev **envp);
+void					builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe);
 //builtin.c
 void					echo_builtin(char **command);
 void					pwd_builtin(char **command);
