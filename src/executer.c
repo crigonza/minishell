@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/11 13:09:37 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/12 19:15:02 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,21 @@ void	check_redir(t_full_comm *cmd)
 	i = 0;
     while (cmd->command[i]) 
 	{
-        if (!ft_strncmp(cmd->command[i], ">", 1))
+		if(!ft_strncmp(cmd->command[i], ">>", 2))
+		{
+			cmd->fileout = cmd->command[i + 1];
+			cmd->fdout = open(cmd->filein, O_WRONLY | O_CREAT | O_APPEND, 0777);
+			if (cmd->fdout == -1)
+			{
+                perror("open");
+                exit(EXIT_FAILURE);
+            }
+            cmd->command[i] = NULL;
+		}
+        else if (!ft_strncmp(cmd->command[i], ">", 1))
 		{
             cmd->fileout = cmd->command[i + 1];
-            cmd->fdout = open(cmd->fileout, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+            cmd->fdout = open(cmd->fileout, O_RDWR | O_CREAT | O_TRUNC, 0777);
 			if(cmd->fdout == -1)
 			{
                 perror("open");
@@ -134,29 +145,23 @@ void exe_init(t_command *cmd)
 
 	env = convert_envp(cmd->env);
 	tmp = cmd->command;
-	if(tmp->next == NULL)
+	while (tmp != NULL)
 	{
-		if(!is_builtin(tmp->command[0]))
-		{
-			check_redir(tmp);
-			solo_cmd(tmp, env);
-		}
-		else
-		{
-			check_redir(tmp);
-			builtin_exe(tmp, cmd->env);
-		}
-		free_env_array(env);
+		if(tmp->next == NULL || tmp->semic_next == 1)
+			execute_semi(&tmp, cmd->env, env);
+		else if(tmp->pipe_next == 1)
+			tmp = execute_pipe(&tmp, cmd->env, env);
+		if (tmp != NULL)
+			tmp = tmp->next;
 	}
-	else
-		execute(cmd, env);
+	free_env_array(env);
 }
 
-void semic_exec(t_command *cmd, char **env)
+void execute_semi(t_full_comm **cmd,t_ev **l_env, char **env)
 {
 	t_full_comm *tmp;
 
-	tmp = cmd->command;
+	tmp = *cmd;
 	if(!is_builtin(tmp->command[0]))
 	{
 		check_redir(tmp);
@@ -165,17 +170,17 @@ void semic_exec(t_command *cmd, char **env)
 	else
 	{
 		check_redir(tmp);
-		builtin_exe(tmp, cmd->env);
+		builtin_exe(tmp, l_env);
 	}
 }
-void execute(t_command *cmd, char **env)
+
+t_full_comm *execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
 {
 	t_full_comm *tmp;
 	int prpipe;
 
 	prpipe = dup(0);
-	tmp = cmd->command;
-	
+	tmp = *cmd;
 	while (tmp != NULL)
 	{
 		if (tmp->pipe_next == 1)
@@ -183,26 +188,14 @@ void execute(t_command *cmd, char **env)
 			if(!is_builtin(tmp->command[0]))
 				first_child(tmp->command, env, &prpipe);
 			else
-				builtin_pipe(tmp, cmd->env, &prpipe);
-		}
-		else if (tmp->semic_next == 1)
-			semic_exec(cmd, env);
+				builtin_pipe(tmp, l_env, &prpipe);
+		}	
 		else
-		/* {
-			if(!is_builtin(tmp->command[0]))
-			{
-				check_redir(tmp);
-				solo_cmd(tmp, env);
-			}
-			else
-			{
-				check_redir(tmp);
-				builtin_exe(tmp, cmd->env);
-			}
-		} */
 			last_child(tmp->command, env, prpipe);
 		while (wait(NULL) != -1);
+		if (tmp->semic_next == 1)
+			break;
 		tmp = tmp->next;
 	}
-	free_env_array(env);
+	return(tmp);
 }

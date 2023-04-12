@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/11 13:09:04 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/12 17:51:04 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ void					last_child(char **cmd, char **envp, int prpipe);
 void					exe_init(t_command *cmd);
 void					solo_cmd(t_full_comm *cmd, char **envp);
 void					redir_solo_cmd(t_full_comm *cmd);
-void					execute(t_command *comm, char **env);
+void					execute_semi(t_full_comm **cmd, t_ev **l_env, char **env);
+t_full_comm				*execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env);
 //builtin_utils.c
 int						is_builtin(char *cmd);
 void					builtin_exe(t_full_comm *cmd, t_ev **envp);

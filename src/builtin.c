@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/11 12:27:13 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/12 19:48:41 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,44 @@ void env_builtin(t_ev **envp, char **command)
        ft_putendl_fd("env: too many arguments", 2); 
 }
 
+int check_key(t_ev **env, char *key, char *value)
+{
+    t_ev    *tmp;
+
+    tmp = *env;
+    while (tmp != NULL)
+    {
+        if(!ft_strncmp(key, tmp->key, ft_strlen(key)))
+        {
+            free(tmp->value);
+            tmp->value = value;
+            return(1);
+        }
+        tmp = tmp->next;
+    }
+    return(0);
+}
+
+void export(t_ev **env, char *key, char *value)
+{
+    t_ev    *tmp;
+    t_ev    *export;
+
+    tmp = *env;
+    export = new_ev(key, value);
+    while(tmp->next != NULL && tmp->next->next != NULL)
+    {
+        tmp = tmp->next;
+    }
+    export->next = tmp->next;
+    tmp->next = export;
+}
+
 void    export_builtin(t_ev **envp, char **command)
 {
     char    *key;
     char    *value;
     t_ev    *tmp;
-    t_ev    *export;
     int     i;
 
     i = 0;
@@ -84,15 +116,9 @@ void    export_builtin(t_ev **envp, char **command)
             value = ft_strdup(&command[1][i + 1]);
             key = malloc(sizeof(char) * i + 1);
             ft_strlcpy(key, command[1], i + 1);
-            export = new_ev(key, value);
+            if (!check_key(envp, key, value))
+                export(envp, key, value);
         }
-        while(tmp->next != NULL && tmp->next->next != NULL)
-        {
-            tmp = tmp->next;
-        }
-        export->next = tmp->next;
-        tmp->next = export;
-        printf("%s\n", tmp->next->next->value);
     }
 }
 

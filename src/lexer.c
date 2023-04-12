@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/11 11:49:58 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/12 19:09:00 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,7 @@ t_lexer	*new_token(char *content, int token_type)
 	new = malloc(sizeof(t_lexer));
 	if (!new)
 		return (NULL);
-	new->content = malloc(sizeof(ft_strlen(content) + 1));
-	ft_strlcpy(new->content, content, ft_strlen(content) + 1);
+	new->content = ft_strdup(content);
 	new->token_type = token_type;
 	new->next = NULL;
 	return (new);
