@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:21:49 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/11 13:18:38 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/13 19:21:22 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void builtin_exe(t_full_comm *cmd, t_ev **envp)
         export_builtin(envp, cmd->command);
     else if(!ft_strncmp("unset", com, ft_strlen(com)))
         unset_builtin(envp, cmd->command);
+    else if(!ft_strncmp("cd", com, ft_strlen(com)))
+            cd_builtin(envp, cmd->command);
     else
     {
         pid = fork();
@@ -50,8 +52,6 @@ void builtin_exe(t_full_comm *cmd, t_ev **envp)
                 echo_builtin(cmd->command);
             else if(!ft_strncmp("pwd", com, ft_strlen(com)))
                 pwd_builtin(cmd->command);
-            else if(!ft_strncmp("cd", com, ft_strlen(com)))
-                cd_builtin(cmd->command);
             else if(!ft_strncmp("env", com, ft_strlen(com)))
                 env_builtin(envp, cmd->command);
             exit(EXIT_SUCCESS);
@@ -85,4 +85,22 @@ void builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe)
 		*prpipe = fd[0];
 		waitpid(-1, NULL, 0);
 	}
+}
+
+int check_key(t_ev **env, char *key, char *value)
+{
+    t_ev    *tmp;
+
+    tmp = *env;
+    while (tmp != NULL)
+    {
+        if(!ft_strncmp(key, tmp->key, ft_strlen(key)))
+        {
+            free(tmp->value);
+            tmp->value = value;
+            return(1);
+        }
+        tmp = tmp->next;
+    }
+    return(0);
 }

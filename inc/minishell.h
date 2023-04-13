@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/12 17:51:04 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/13 19:20:12 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,14 @@ t_full_comm				*execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env);
 int						is_builtin(char *cmd);
 void					builtin_exe(t_full_comm *cmd, t_ev **envp);
 void					builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe);
+int						check_key(t_ev **env, char *key, char *value);
+//cd.c
+void					cd_builtin(t_ev **envp, char **command);
+void					change_pwd(t_ev **envp, char *path);
+void					cd_home(t_ev **envp);
 //builtin.c
 void					echo_builtin(char **command);
 void					pwd_builtin(char **command);
-void					cd_builtin(char **command);
 void					env_builtin(t_ev **envp, char **env);
 void					export_builtin(t_ev **envp, char **command);
 void					unset_builtin(t_ev **envp, char **command);

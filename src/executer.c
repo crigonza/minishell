@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/12 19:15:02 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/13 18:25:17 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	check_redir(t_full_comm *cmd)
 		if(!ft_strncmp(cmd->command[i], ">>", 2))
 		{
 			cmd->fileout = cmd->command[i + 1];
-			cmd->fdout = open(cmd->filein, O_WRONLY | O_CREAT | O_APPEND, 0777);
+			cmd->fdout = open(cmd->fileout, O_WRONLY | O_CREAT | O_APPEND, 0777);
 			if (cmd->fdout == -1)
 			{
                 perror("open");
