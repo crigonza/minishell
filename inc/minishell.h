@@ -126,6 +126,7 @@ void					add_ev(t_ev **env, t_ev *new);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_full_comm **command);
+void					freedonia(char **out);
 //signal.c
 void					process_signal(int signum);
 void					config_signals(void);
