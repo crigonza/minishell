@@ -31,6 +31,7 @@ char	*expand_envp(char *content, char *key, char *value)
 		expanded = value;
 	back = ft_strnstr(content, key, ft_strlen(content)) + ft_strlen(key);
 	expanded = ft_strjoin(expanded, back);
+	free(back);
 	return (expanded);
 }
 
@@ -125,6 +126,7 @@ void	get_full_path(char **path, t_lexer *lex)
 	int 	i;
 	char *aux;
 
+	aux = NULL;
 	i = 0;
 	if(lex->token_type == COMMAND && !is_builtin(lex->content))
 	{
@@ -140,6 +142,7 @@ void	get_full_path(char **path, t_lexer *lex)
 			}
 			i++;
 		}
+		free(aux);
 	}
 }
 
@@ -157,12 +160,13 @@ void	full_path(t_lexer **lexer, t_ev **env)
 	{
 		split_path = ft_split(path, ':');
 		get_full_path(split_path, tmp);
-		while(split_path[i])
+		freedonia(split_path);
+	/*	while(split_path[i])
 		{
 			free(split_path[i]);
 			i++;
 		}
-		free(split_path);
+		free(split_path);*/
 		while(tmp != NULL)
 		{
 			if (tmp->token_type == PIPE || tmp->token_type == SEMICOLON)
