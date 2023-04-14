@@ -22,8 +22,14 @@ void echo_builtin(char **command)
 
 void pwd_builtin(char **command)
 {
+    char *buff;
+
     if(!command[1])
-        ft_putendl_fd(getcwd(NULL, 0), 1);
+    {
+        buff = getcwd(NULL, 0); //añadido para poder liberarlo
+        ft_putendl_fd(buff, 1);
+        free(buff);
+    }
     else
         ft_putendl_fd("pwd: too many arguments", 2);
 }

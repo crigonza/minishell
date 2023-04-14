@@ -59,6 +59,7 @@ void cd_home(t_ev **envp)
 void cd_builtin(t_ev **envp, char **command)
 {
     int val;
+    char *buff;
 
     if(!command[2])
     {
@@ -69,7 +70,11 @@ void cd_builtin(t_ev **envp, char **command)
             ft_putendl_fd(command[1], 2);
         }
         else
-            change_pwd(envp, getcwd(NULL, 0));
+        {
+            buff = getcwd(NULL, 0);  //añadido para poder liberarlo
+            change_pwd(envp, buff);
+            free(buff);
+        }
     }
     else if(!command[1])
         cd_home(envp);
