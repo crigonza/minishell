@@ -6,16 +6,20 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/13 19:23:01 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/17 19:05:43 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+extern int exit_value;
+
 void echo_builtin(char **command)
 {
     if (!ft_strncmp(command[1], "-n", 2))
         ft_putstr_fd(command[2], 1);
+    else if (!ft_strncmp(command[1], "$?", 2))
+        printf("%d\n", exit_value);
     else
         ft_putendl_fd(command[1], 1);
 }

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/16 19:37:35 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/17 18:59:34 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ typedef struct s_lexer
 	{
 		STRING,
 		COMMAND,
-		GREATER_THAN,
-		LESS_THAN,
 		SEMICOLON,
 		PIPE,
 	} token_type;
@@ -82,7 +80,6 @@ int						get_num(t_lexer **lexer, char *prompt);
 void					tokenize_prompt(t_lexer **lexer, char prompt);
 t_lexer					*new_token(char *content, int token_type);
 void					add_token(t_lexer **lexer, t_lexer *new);
-t_lexer					*last_token(t_lexer *lexer);
 //expander.c
 void					full_path(t_lexer **lexer, t_ev **env);
 void					retokenize(t_lexer **lexer, t_ev **envp);
@@ -104,7 +101,6 @@ void					first_child(char **cmd, char **envp, int *prpipe);
 void					last_child(char **cmd, char **envp, int prpipe);
 void					exe_init(t_command *cmd);
 void					solo_cmd(t_full_comm *cmd, char **envp);
-void					redir_solo_cmd(t_full_comm *cmd);
 void					execute_semi(t_full_comm **cmd, t_ev **l_env, char **env);
 t_full_comm				*execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env);
 //builtin_utils.c
@@ -137,6 +133,15 @@ void					freedonia(char **out);
 void					process_signal(int signum);
 void					config_signals(void);
 //heredoc.c
+void					add_line(t_heredoc **hrdc, t_heredoc *new_hrdc);
 void					heredoc(char *limit);
+t_heredoc				*new_doc(char *str);
+void					free_hrdc(t_heredoc **hrdc);
+void					print_heredoc(t_heredoc **hrdc);
+//redir.c
+void    				file_in(t_full_comm *cmd);
+void					file_out(t_full_comm *cmd);
+int						check_redir(t_full_comm *cmd);
+void					redir_solo_cmd(t_full_comm *cmd);
 
 #endif

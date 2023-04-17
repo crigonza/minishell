@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/15 20:25:22 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/17 17:41:21 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,6 @@ void	get_full_path(char **path, t_lexer *lex)
 	int 	i;
 	char *aux;
 
-	aux = NULL;
 	i = 0;
 	if(lex->token_type == COMMAND && !is_builtin(lex->content))
 	{
@@ -167,7 +166,6 @@ void	get_full_path(char **path, t_lexer *lex)
 			}
 			i++;
 		}
-		free(aux);
 	}
 }
 

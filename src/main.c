@@ -6,11 +6,15 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:11:13 by crigonza          #+#    #+#             */
-/*   Updated: 2023/03/28 11:45:31 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/17 19:54:40 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+int	exit_value;
+
+exit_value = 0;
 
 int	init_prompt(t_ev **env)
 {
@@ -22,7 +26,7 @@ int	init_prompt(t_ev **env)
 	{
 		config_signals();
 		prompt = readline("\e[34m""MiniShell$>""\x1b[m");
-		 if (!prompt)
+		if (!prompt)
         {
             printf("exit\n");  // CTRL + D
             exit(-1);
@@ -38,7 +42,6 @@ int	init_prompt(t_ev **env)
 			init_lexer(prompt, env);
 		}	  
 	}
-	
 	return(exit_val);
 }
 

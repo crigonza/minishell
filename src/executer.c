@@ -6,71 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/16 19:36:40 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/17 19:53:36 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	check_redir(t_full_comm *cmd)
-{
-    int i;
-
-	i = 0;
-    while (cmd->command[i]) 
-	{
-		if(!ft_strncmp(cmd->command[i], ">>", 2))
-		{
-			cmd->fileout = cmd->command[i + 1];
-			cmd->fdout = open(cmd->fileout, O_WRONLY | O_CREAT | O_APPEND, 0777);
-			if (cmd->fdout == -1)
-			{
-                perror("open");
-                exit(EXIT_FAILURE);
-            }
-            cmd->command[i] = NULL;
-		}
-		else if(!ft_strncmp(cmd->command[i], "<<", 2))
-			heredoc(cmd->command[i + 1]);
-        else if (!ft_strncmp(cmd->command[i], ">", 1))
-		{
-            cmd->fileout = cmd->command[i + 1];
-            cmd->fdout = open(cmd->fileout, O_RDWR | O_CREAT | O_TRUNC, 0777);
-			if(cmd->fdout == -1)
-			{
-                perror("open");
-                exit(EXIT_FAILURE);
-            }
-            cmd->command[i] = NULL;
-        }
-		else if(!ft_strncmp(cmd->command[i], "<", 1))
-		{
-			cmd->filein = cmd->command[i + 1];
-			cmd->fdin = open(cmd->filein, O_RDONLY);
-			if (cmd->fdin == -1)
-			{
-                perror("open");
-                exit(EXIT_FAILURE);
-            }
-            cmd->command[i] = NULL;
-		}
-        i++;
-    }
-}
-
-void redir_solo_cmd(t_full_comm *cmd)
-{
-	if(cmd->fdin != STDIN_FILENO)
-	{
-		dup2(cmd->fdin, STDIN_FILENO);
-		close(cmd->fdin);
-	}
-	if(cmd->fdout != STDOUT_FILENO)
-	{
-		dup2(cmd->fdout, STDOUT_FILENO);
-		close(cmd->fdout);
-	}
-}
+extern int exit_value;
 
 void solo_cmd(t_full_comm *cmd, char **envp)
 {
@@ -166,13 +108,13 @@ void execute_semi(t_full_comm **cmd,t_ev **l_env, char **env)
 	tmp = *cmd;
 	if(!is_builtin(tmp->command[0]))
 	{
-		check_redir(tmp);
-		solo_cmd(tmp, env);
+		if(!check_redir(tmp))
+			solo_cmd(tmp, env);
 	}
 	else
 	{
-		check_redir(tmp);
-		builtin_exe(tmp, l_env);
+		if(!check_redir(tmp))
+			builtin_exe(tmp, l_env);
 	}
 }
 

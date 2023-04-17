@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/12 19:09:00 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/17 19:02:09 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	get_string(t_lexer **lexer, char *prompt)
 	free(str);
 	return (i + 2);
 }
+
 int close_quotes(char *prompt)
 {
 	int quote;
@@ -154,7 +155,7 @@ void	init_lexer(char *prompt, t_ev **envp)
 	if(lexer != NULL)
 		retokenize(&lexer, envp);
 	free_lexer(&lexer);
-	//free(lexer);
+	free(lexer);
 }
 
 t_lexer	*new_token(char *content, int token_type)
@@ -179,14 +180,8 @@ void	add_token(t_lexer **lexer, t_lexer *new)
 		*lexer = new;
 	else
 	{
-		tmp = last_token(*lexer);
+		while (tmp->next != NULL)
+			tmp = tmp->next;
 		tmp->next = new;
 	}
-}
-
-t_lexer	*last_token(t_lexer *lexer)
-{
-	while (lexer->next != NULL)
-		lexer = lexer->next;
-	return (lexer);
 }
