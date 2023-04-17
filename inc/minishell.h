@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/13 19:20:12 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/16 19:37:35 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,12 @@ typedef struct s_ev
 	char *value;
 	struct s_ev *next;
 }		t_ev;
+
+typedef struct s_heredoc
+{
+	char	*line;
+	struct s_heredoc *next;
+}		t_heredoc;
 
 //main.c
 int						main(int argc, char **argv, char **envp);
@@ -130,5 +136,7 @@ void					freedonia(char **out);
 //signal.c
 void					process_signal(int signum);
 void					config_signals(void);
+//heredoc.c
+void					heredoc(char *limit);
 
 #endif

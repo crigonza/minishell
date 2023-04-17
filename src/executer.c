@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/13 18:25:17 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/16 19:36:40 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	check_redir(t_full_comm *cmd)
             }
             cmd->command[i] = NULL;
 		}
+		else if(!ft_strncmp(cmd->command[i], "<<", 2))
+			heredoc(cmd->command[i + 1]);
         else if (!ft_strncmp(cmd->command[i], ">", 1))
 		{
             cmd->fileout = cmd->command[i + 1];

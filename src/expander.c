@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/11 12:21:31 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/15 20:25:22 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*expand_envp(char *content, char *key, char *value)
 		expanded = value;
 	back = ft_strnstr(content, key, ft_strlen(content)) + ft_strlen(key);
 	expanded = ft_strjoin(expanded, back);
-	free(back);
+	//free(back);
 	return (expanded);
 }
 
@@ -56,6 +56,31 @@ char	*get_envp(t_ev **env, char *content)
 	return (expanded);
 }
 
+int	check_squotes(char *str)
+{
+	int i;
+	int quote;
+	int dollar;
+
+	i = 0;
+	quote = 0;
+	dollar = 0;
+	while(str[i])
+	{
+		if (str[i] == 39)
+		{
+			if (quote == 1 && dollar == 1)
+				return(1);
+			else if (quote == 0)
+				quote = 1;
+		}
+		else if (str[i] == '$' && quote == 1)
+			dollar = 1;
+		i++;
+	}
+	return(0);
+}
+
 void	expander(t_lexer **lexer, t_ev **envp)
 {
 	t_lexer	*tmp;
@@ -69,7 +94,8 @@ void	expander(t_lexer **lexer, t_ev **envp)
 		{
 			if (tmp->content[i] == '$')
 			{
-				tmp->content = get_envp(envp, tmp->content);
+				if(!check_squotes(tmp->content))
+					tmp->content = get_envp(envp, tmp->content);
 			}
 			i++;
 		}
@@ -100,7 +126,6 @@ void	retokenize(t_lexer **lexer, t_ev **envp)
 		}
 		tmp = tmp->next;
 	}
-	free(tmp);
 	full_path(lexer, envp);
 	expander(lexer, envp);
 }
@@ -160,13 +185,13 @@ void	full_path(t_lexer **lexer, t_ev **env)
 	{
 		split_path = ft_split(path, ':');
 		get_full_path(split_path, tmp);
-		freedonia(split_path);
-	/*	while(split_path[i])
+		//freedonia(split_path);
+		while(split_path[i])
 		{
 			free(split_path[i]);
 			i++;
 		}
-		free(split_path);*/
+		free(split_path);
 		while(tmp != NULL)
 		{
 			if (tmp->token_type == PIPE || tmp->token_type == SEMICOLON)
