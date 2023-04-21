@@ -6,15 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:11:13 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/17 19:54:40 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/21 21:32:51 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 int	exit_value;
-
-exit_value = 0;
 
 int	init_prompt(t_ev **env)
 {
@@ -36,10 +34,12 @@ int	init_prompt(t_ev **env)
 			if (strncmp(prompt, "exit", 4) == 0)
 			{
 				exit_val = exit_v(prompt);
+				free(prompt);
 				break;
 			}
 			add_history(prompt);
 			init_lexer(prompt, env);
+			free (prompt);
 		}	  
 	}
 	return(exit_val);
@@ -93,12 +93,10 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	env = malloc(sizeof(t_ev));
 	env = NULL;
 	set_envp(envp, &env);
 	exval = init_prompt(&env);
 	free_envp(&env);
-	free(env);
 	rl_clear_history();
 	system("leaks -q minishell");
 	exit (exval);

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/17 17:41:21 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/21 20:40:15 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ char	*expand_envp(char *content, char *key, char *value)
 		expanded = value;
 	back = ft_strnstr(content, key, ft_strlen(content)) + ft_strlen(key);
 	expanded = ft_strjoin(expanded, back);
-	//free(back);
 	return (expanded);
 }
 
@@ -101,7 +100,6 @@ void	expander(t_lexer **lexer, t_ev **envp)
 		}
 		tmp = tmp->next;
 	}
-	free(tmp);
 	print_lexer(lexer);
 	parser(lexer, envp);
 }
@@ -150,20 +148,23 @@ void	get_full_path(char **path, t_lexer *lex)
 {
 	int 	i;
 	char *aux;
+	char *pth;
 
 	i = 0;
 	if(lex->token_type == COMMAND && !is_builtin(lex->content))
 	{
 		while(path[i])
 		{
-			path[i] = ft_strjoin(path[i], "/");
-			aux = ft_strjoin(path[i], lex->content);
+			pth = ft_strjoin(path[i], "/");
+			aux = ft_strjoin(pth, lex->content);
 			if(!access(aux, X_OK))
 			{
 				free(lex->content);
 				lex->content = aux;
 				break;
 			}
+			free(aux);
+			free(pth);
 			i++;
 		}
 	}

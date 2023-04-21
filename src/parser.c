@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/11 13:10:55 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/21 21:32:04 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 void	free_command(t_full_comm **command)
 {
 	t_full_comm	*tmp;
+	int i;
 
 	while ((*command) != NULL)
 	{
+		i = 0;
 		tmp = (*command);
 		(*command) = (*command)->next;
 		free(tmp->command);
@@ -82,13 +84,13 @@ void	parser(t_lexer **lexer, t_ev **envp)
 	t_command	*command;
 
 	command = malloc(sizeof(t_command));
-	command->command = malloc(sizeof(t_full_comm));
 	command->command = NULL;
 	command->env = envp;
 	parse_command(&command->command, lexer);
 	print_command(&command->command);
 	exe_init(command);
 	free_command(&command->command);
+	free(command);
 }
 
 void	parse_command(t_full_comm **command, t_lexer **lexer)

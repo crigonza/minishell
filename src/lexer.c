@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/17 19:02:09 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/21 21:32:17 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	get_echo_string(t_lexer **lexer, char *prompt)
 		str = malloc(sizeof(i + 1));
 		ft_strlcpy(str, prompt, i + 1);
 		add_token(lexer, new_token(str, STRING));
+		free(str);
 	}
 	return (i);
 }
@@ -130,7 +131,6 @@ void	init_lexer(char *prompt, t_ev **envp)
 	t_lexer	*lexer;
 
 	i = 0;
-	lexer = (t_lexer *)malloc(sizeof(t_lexer));
 	lexer = NULL;
 	while (prompt[i] != '\0')
 	{
@@ -155,7 +155,6 @@ void	init_lexer(char *prompt, t_ev **envp)
 	if(lexer != NULL)
 		retokenize(&lexer, envp);
 	free_lexer(&lexer);
-	free(lexer);
 }
 
 t_lexer	*new_token(char *content, int token_type)
