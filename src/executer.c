@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/17 19:53:36 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/24 17:17:18 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void solo_cmd(t_full_comm *cmd, char **envp)
 	else if (pid == 0)
 	{
 		redir_solo_cmd(cmd);
-		val = execve(cmd->command[0], cmd->command, NULL);
+		val = execve(cmd->command[0], cmd->command, envp);
 		if (val == -1)
 		{
 			perror("Error");

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/21 20:58:15 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/24 20:57:18 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,11 +112,16 @@ int						check_key(t_ev **env, char *key, char *value);
 void					cd_builtin(t_ev **envp, char **command);
 void					change_pwd(t_ev **envp, char *path);
 void					cd_home(t_ev **envp);
+//export.c
+void					export_builtin(t_ev **envp, char **command);
+void					order_vars(t_ev **envp);
+void					print_order_ev(t_ev **envp);
+void					export_whout_args(t_ev **envp);
+void					export(t_ev **env, char *key, char *value);
 //builtin.c
 void					echo_builtin(char **command);
 void					pwd_builtin(char **command);
 void					env_builtin(t_ev **envp, char **env);
-void					export_builtin(t_ev **envp, char **command);
 void					unset_builtin(t_ev **envp, char **command);
 //envp.c
 void 					set_envp(char **envp, t_ev **env);
@@ -139,8 +144,8 @@ t_heredoc				*new_doc(char *str);
 void					free_hrdc(t_heredoc **hrdc);
 void					print_heredoc(t_heredoc **hrdc);
 //redir.c
-void    				file_in(t_full_comm *cmd);
-void					file_out(t_full_comm *cmd);
+void    				file_in(t_full_comm *cmd, int i);
+void					file_out(t_full_comm *cmd, int i);
 int						check_redir(t_full_comm *cmd);
 void					redir_solo_cmd(t_full_comm *cmd);
 

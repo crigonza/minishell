@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 11:35:20 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/21 21:25:06 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/21 22:11:16 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int ev_len(t_ev **env)
     int i;
     t_ev *tmp;
 
+    i = 0;
     tmp = *env;
     while(tmp != NULL)
     {

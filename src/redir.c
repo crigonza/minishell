@@ -6,57 +6,41 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:49:07 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/17 18:01:08 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/24 17:39:13 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../inc/minishell.h"
 
-void	file_out(t_full_comm *cmd)
+void	file_out(t_full_comm *cmd, int i)
 {
-	int i;
-
-	i = 0; 
-	while(cmd->command[i])
+	cmd->fileout = cmd->command[i + 1];
+	if(!ft_strncmp(cmd->command[i], ">>", 2))
+		cmd->fdout = open(cmd->fileout, O_WRONLY | O_CREAT | O_APPEND, 0777);
+	else if (!ft_strncmp(cmd->command[i], ">", 1))
+		cmd->fdout = open(cmd->fileout, O_RDWR | O_CREAT | O_TRUNC, 0777);
+	cmd->command[i] = NULL;
+	if (cmd->fdout == -1)
 	{
-		if(!ft_strncmp(cmd->command[i], ">>", 2) || !ft_strncmp(cmd->command[i], ">", 1))
-		{
-			cmd->fileout = cmd->command[i + 1];
-			if(!ft_strncmp(cmd->command[i], ">>", 2))
-				cmd->fdout = open(cmd->fileout, O_WRONLY | O_CREAT | O_APPEND, 0777);
-			else if (!ft_strncmp(cmd->command[i], ">", 1))
-            	cmd->fdout = open(cmd->fileout, O_RDWR | O_CREAT | O_TRUNC, 0777);
-			cmd->command[i] = NULL;
-			if (cmd->fdout == -1)
-			{
-				perror("open");
-				exit(EXIT_FAILURE);
-			}
-		}
-		i++;
+		perror("open");
+		exit(EXIT_FAILURE);
 	}
+	printf("%s  ", cmd->fileout);
 }
 
-void    file_in(t_full_comm *cmd)
+void    file_in(t_full_comm *cmd, int i)
 {
-    int i;
-
-    i =  0;
-    while(cmd->command[i])
-    {
-        if(!ft_strncmp(cmd->command[i], "<", 1))
+	if(!ft_strncmp(cmd->command[i], "<", 1))
+	{
+		cmd->filein = cmd->command[i + 1];
+		cmd->fdin = open(cmd->filein, O_RDONLY);
+		if (cmd->fdin == -1)
 		{
-			cmd->filein = cmd->command[i + 1];
-			cmd->fdin = open(cmd->filein, O_RDONLY);
-			if (cmd->fdin == -1)
-			{
-                perror("open");
-                exit(EXIT_FAILURE);
-            }
-            cmd->command[i] = NULL;
+			perror("open");
+			exit(EXIT_FAILURE);
 		}
-        i ++;
-    }
+		cmd->command[i] = NULL;
+	}
 }
 
 int	check_redir(t_full_comm *cmd)
@@ -66,18 +50,18 @@ int	check_redir(t_full_comm *cmd)
 	i = 0;
     while (cmd->command[i]) 
 	{
-		if(!ft_strncmp(cmd->command[i], ">>", 2))
-			file_out(cmd);
-        else if (!ft_strncmp(cmd->command[i], ">", 1))
-			file_out(cmd);
-		else if(!ft_strncmp(cmd->command[i], "<<", 2))
+		if(!ft_strncmp(cmd->command[0], "<<", 2))
 		{
 			heredoc(cmd->command[i + 1]);
             if(!cmd->command[i + 2])
 			    return (1);
 		}
+		if(!ft_strncmp(cmd->command[i], ">>", 2))
+			file_out(cmd, i);
+        else if (!ft_strncmp(cmd->command[i], ">", 1))
+			file_out(cmd, i);
 		else if(!ft_strncmp(cmd->command[i], "<", 1))
-            file_in(cmd);
+            file_in(cmd, i);
         i++;
     }
 	return(0);

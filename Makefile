@@ -6,13 +6,13 @@
 #    By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/01 21:13:04 by crigonza          #+#    #+#              #
-#    Updated: 2023/04/12 17:02:14 by crigonza         ###   ########.fr        #
+#    Updated: 2023/04/21 22:13:47 by crigonza         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	= minishell
 CC		= gcc
-CFLAGS	=
+CFLAGS	= -Wall -Werror -Wextra
 L_FLAGS = -lreadline
 LDFLAGS= -L/opt/homebrew/opt/readline/lib
 CPPFLAGS= -I/opt/homebrew/opt/readline/include

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/17 19:05:43 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/24 20:56:54 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,45 +53,6 @@ void env_builtin(t_ev **envp, char **command)
     }
     else
        ft_putendl_fd("env: too many arguments", 2); 
-}
-
-void export(t_ev **env, char *key, char *value)
-{
-    t_ev    *tmp;
-    t_ev    *export;
-
-    tmp = *env;
-    export = new_ev(key, value);
-    while(tmp->next != NULL && tmp->next->next != NULL)
-    {
-        tmp = tmp->next;
-    }
-    export->next = tmp->next;
-    tmp->next = export;
-}
-
-void    export_builtin(t_ev **envp, char **command)
-{
-    char    *key;
-    char    *value;
-    t_ev    *tmp;
-    int     i;
-
-    i = 0;
-    tmp = *envp;
-    if (command[1])
-    {
-        while(command[1][i] != '=')
-            i++;
-        if(command[1][i] == '=' && i != 0)
-        {
-            value = ft_strdup(&command[1][i + 1]);
-            key = malloc(sizeof(char) * i + 1);
-            ft_strlcpy(key, command[1], i + 1);
-            if (!check_key(envp, key, value))
-                export(envp, key, value);
-        }
-    }
 }
 
 void unset_builtin(t_ev **envp, char **command)

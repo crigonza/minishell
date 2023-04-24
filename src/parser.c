@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/21 21:32:04 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/21 22:14:21 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,9 @@
 void	free_command(t_full_comm **command)
 {
 	t_full_comm	*tmp;
-	int i;
 
 	while ((*command) != NULL)
 	{
-		i = 0;
 		tmp = (*command);
 		(*command) = (*command)->next;
 		free(tmp->command);
