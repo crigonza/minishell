@@ -6,11 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/21 20:40:15 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/25 10:59:27 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+extern int exit_value;
 
 char	*expand_envp(char *content, char *key, char *value)
 {
@@ -80,12 +82,32 @@ int	check_squotes(char *str)
 	return(0);
 }
 
+void	expand_ret_val(t_lexer **lexer)
+{
+	t_lexer *tmp;
+	
+	tmp = *lexer;
+	while(tmp != NULL)
+	{
+		if(!ft_strncmp(tmp->content, "$?", ft_strlen(tmp->content)))
+		{
+			free(tmp->content);
+			if (exit_value == 256)
+				tmp->content = ft_itoa(1);
+			else
+				tmp->content = ft_itoa(exit_v(ft_itoa(exit_value)));
+		}
+		tmp = tmp->next;
+	}
+}
+
 void	expander(t_lexer **lexer, t_ev **envp)
 {
 	t_lexer	*tmp;
 	int		i;
 
 	tmp = *lexer;
+	expand_ret_val(lexer);
 	while (tmp != NULL)
 	{
 		i = 0;
@@ -184,7 +206,6 @@ void	full_path(t_lexer **lexer, t_ev **env)
 	{
 		split_path = ft_split(path, ':');
 		get_full_path(split_path, tmp);
-		//freedonia(split_path);
 		while(split_path[i])
 		{
 			free(split_path[i]);

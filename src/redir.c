@@ -6,11 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:49:07 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/24 17:39:13 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/25 11:49:04 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../inc/minishell.h"
+
+extern int exit_value;
 
 void	file_out(t_full_comm *cmd, int i)
 {
@@ -52,9 +54,20 @@ int	check_redir(t_full_comm *cmd)
 	{
 		if(!ft_strncmp(cmd->command[0], "<<", 2))
 		{
-			heredoc(cmd->command[i + 1]);
-            if(!cmd->command[i + 2])
-			    return (1);
+			if(!cmd->command[1])
+			{
+				ft_putendl_fd("bash: syntax error near unexpected token `newline'", 2);
+				exit_value = 256;
+				return(1);
+			}
+			else
+			{
+				heredoc(cmd->command[i + 1]);
+				if(cmd->command[i + 2])
+					return (0);
+				else
+					return(1);
+			}
 		}
 		if(!ft_strncmp(cmd->command[i], ">>", 2))
 			file_out(cmd, i);

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:01:33 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/17 08:20:22 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/25 11:07:24 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void heredoc(char *limit)
     heredoc = NULL;
     while(1)
     {
-        line = readline("heredoc>");
+        line = readline("heredoc> ");
         if(ft_strlen(line) > 0)
         {
             if(ft_strncmp(limit, line, ft_strlen(line)) != 0)
