@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:49:07 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/25 11:49:04 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/25 13:17:10 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	file_out(t_full_comm *cmd, int i)
 		perror("open");
 		exit(EXIT_FAILURE);
 	}
-	printf("%s  ", cmd->fileout);
 }
 
 void    file_in(t_full_comm *cmd, int i)

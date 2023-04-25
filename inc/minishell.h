@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/24 20:57:18 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/04/25 12:25:38 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void					print_lexer(t_lexer **lexer);
 void					print_command(t_full_comm **command);
 void					freedonia(char **out);
 //signal.c
-void					process_signal(int signum);
+void					process_signal(int signum, siginfo_t *info, void *context);
 void					config_signals(void);
 //heredoc.c
 void					add_line(t_heredoc **hrdc, t_heredoc *new_hrdc);
