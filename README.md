@@ -4,7 +4,7 @@
 <img src="https://img.shields.io/badge/STATUS-EN%20DESAROLLO-green">
 </p>
 
-Minishell is a school 42 project that consists of recreating a basic shell, taking bash as a reference. This project was done by @crigonza and @ipaelo, two students passionate about programming and learning.
+Minishell is a school 42 project that consists of recreating a basic shell, taking bash as a reference. This project was done by [@crigonza](https://github.com/crigonza) and [@ipaelo](https://github.com/ipaelo), two students passionate about programming and learning.
 
 ## Objectives
 
