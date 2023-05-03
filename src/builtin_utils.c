@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:21:49 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/13 19:21:22 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/03 19:45:21 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,25 @@ void builtin_exe(t_full_comm *cmd, t_ev **envp)
         else
             waitpid(pid, NULL, 0);
     }
+}
+
+void last_builtin_pipe(t_full_comm *cmd, t_ev **envp, int prpipe)
+{
+	pid_t pid;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		dup2(prpipe, STDIN_FILENO);
+		close(prpipe);
+		builtin_exe(cmd, envp);
+		exit(EXIT_SUCCESS);
+	}
+	else
+	{
+		close (prpipe);
+		waitpid(-1, NULL, 0);
+	}
 }
 
 void builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe)

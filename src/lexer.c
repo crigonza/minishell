@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/21 21:32:17 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/03 20:02:22 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	get_command(t_lexer **lexer, char *prompt)
 	i = 0;
 	while (prompt[i] == '-')
 		i++;
-	while (prompt[i] && prompt[i] != '\t' && prompt[i] != ' ' && prompt[i] != '|' && prompt[i] != ';')
+	while (prompt[i] && prompt[i] != '\t' && prompt[i] != ' ' && prompt[i] != '|' && prompt[i] != ';' && prompt[i] != '<' && prompt[i] != '>')
 		i++;
 	str = malloc(sizeof(i + 1));
 	ft_strlcpy(str, prompt, i + 1);
@@ -124,6 +124,17 @@ int	get_command(t_lexer **lexer, char *prompt)
 	return (i);
 }
 
+void	set_tokens(char prompt, t_lexer **lexer)
+{
+	if (prompt == '|')
+		add_token(lexer, new_token("|", PIPE));
+	if (prompt == ';')
+		add_token(lexer, new_token(";", SEMICOLON));
+	if (prompt == '<')
+		add_token(lexer, new_token("<", LESS_THAN));
+	if (prompt == '>')
+		add_token(lexer, new_token(">", GREATER_THAN));
+}
 
 void	init_lexer(char *prompt, t_ev **envp)
 {
@@ -138,16 +149,11 @@ void	init_lexer(char *prompt, t_ev **envp)
 			i++;
 		if (prompt[i] == 34)
 			i += get_string(&lexer, &prompt[i + 1]);
-		if (ft_isprint(prompt[i]) && prompt[i] != '|' && prompt[i] != ';')
+		if (ft_isprint(prompt[i]) && prompt[i] != '|' && prompt[i] != ';' && prompt[i] != '<' && prompt[i] != '>')
 			i += get_command(&lexer, &prompt[i]);
-        if (prompt[i] == '|')
+		else
 		{
-			add_token(&lexer, new_token("|", PIPE));
-			i++;
-		}
-		if (prompt[i] == ';')
-		{
-			add_token(&lexer, new_token(";", SEMICOLON));
+			set_tokens(prompt[i], &lexer);
 			i++;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/25 10:39:43 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/03 20:58:38 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ void solo_cmd(t_full_comm *cmd, char **envp)
 		if (exit_value == -1)
 		{
 			perror("Error");
-			exit(EXIT_FAILURE);
+			exit(exit_value);
 		}
 		else 
-			exit(EXIT_SUCCESS);
+			exit(exit_value);
 	}
 }
 
@@ -134,7 +134,12 @@ t_full_comm *execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
 				builtin_pipe(tmp, l_env, &prpipe);
 		}	
 		else
-			last_child(tmp->command, env, prpipe);
+		{
+			if(!is_builtin(tmp->command[0]))
+				last_child(tmp->command, env, prpipe);
+			else
+				last_builtin_pipe(tmp, l_env, prpipe);
+		}
 		while (wait(NULL) != -1);
 		if (tmp->semic_next == 1)
 			break;

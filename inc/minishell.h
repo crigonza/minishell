@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/25 12:25:38 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/03 20:58:20 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,10 @@ typedef struct s_lexer
 		COMMAND,
 		SEMICOLON,
 		PIPE,
+		LESS_THAN,
+		GREATER_THAN,
+		D_LESS_THAN,
+		D_GREATER_THAN,
 	} token_type;
 	char				*content;
 	struct s_lexer		*next;
@@ -78,15 +82,16 @@ int						get_string(t_lexer **lexer, char *prompt);
 int						get_command(t_lexer **lexer, char *prompt);
 int						get_num(t_lexer **lexer, char *prompt);
 void					tokenize_prompt(t_lexer **lexer, char prompt);
+void					set_tokens(char prompt, t_lexer **lexer);
 t_lexer					*new_token(char *content, int token_type);
 void					add_token(t_lexer **lexer, t_lexer *new);
 //expander.c
-void					full_path(t_lexer **lexer, t_ev **env);
+int						full_path(t_lexer **lexer, t_ev **env);
 void					retokenize(t_lexer **lexer, t_ev **envp);
 void					expander(t_lexer **lexer, t_ev **envp);
 char					*get_envp(t_ev **env, char *content);
 char					*expand_envp(char *content, char *key, char *value);
-void					get_full_path(char **path, t_lexer *lex);
+int						get_full_path(char **path, t_lexer *lex);
 char					*get_path(t_ev **env);
 //parser.c
 t_full_comm				*last_command(t_full_comm *command);
@@ -107,6 +112,7 @@ t_full_comm				*execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env);
 int						is_builtin(char *cmd);
 void					builtin_exe(t_full_comm *cmd, t_ev **envp);
 void					builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe);
+void					last_builtin_pipe(t_full_comm *cmd, t_ev **envp, int prpipe);
 int						check_key(t_ev **env, char *key, char *value);
 //cd.c
 void					cd_builtin(t_ev **envp, char **command);

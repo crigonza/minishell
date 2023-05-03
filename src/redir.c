@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:49:07 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/25 13:17:10 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/03 20:23:11 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	check_redir(t_full_comm *cmd)
 		{
 			if(!cmd->command[1])
 			{
-				ft_putendl_fd("bash: syntax error near unexpected token `newline'", 2);
+				ft_putendl_fd("minishell: syntax error near unexpected token `newline'", 2);
 				exit_value = 256;
 				return(1);
 			}
