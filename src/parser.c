@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/04 09:43:39 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 12:40:16 by itorres-         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/minishell.h"
 
@@ -92,10 +92,10 @@ void	parser(t_lexer **lexer, t_ev **envp)
 
 void	parse_command(t_full_comm **command, t_lexer **lexer)
 {
-	char **comm;
-	t_lexer *tmp;
-	int i;
-	int pipe;
+	char	**comm;
+	t_lexer	*tmp;
+	int		i;
+	int		pipe;
 
 	i = 0;
 	pipe = 0;
@@ -108,7 +108,7 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 		tmp = tmp->next;
 		i++;
 	}
-	if(tmp != NULL && tmp->token_type == PIPE)
+	if (tmp != NULL && tmp->token_type == PIPE)
 		pipe = 1;
 	add_command(command, new_command(comm, pipe));
 	if (tmp != NULL && tmp->token_type == PIPE)

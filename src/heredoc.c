@@ -1,90 +1,92 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:01:33 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/04 10:09:12 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 12:39:18 by itorres-         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/minishell.h"
-void    add_line(t_heredoc **hrdc, t_heredoc *new_hrdc)
-{
-    t_heredoc   *tmp;
 
-    tmp = *hrdc;
-    if(*hrdc == NULL)
-        *hrdc = new_hrdc; 
-    else
-    {
-        while(tmp->next != NULL)
-            tmp = tmp->next;
-        tmp->next = new_hrdc;
-    }
+void	add_line(t_heredoc **hrdc, t_heredoc *new_hrdc)
+{
+	t_heredoc	*tmp;
+
+	tmp = *hrdc;
+	if (*hrdc == NULL)
+		*hrdc = new_hrdc;
+	else
+	{
+		while (tmp->next != NULL)
+			tmp = tmp->next;
+		tmp->next = new_hrdc;
+	}
 }
 
-t_heredoc *new_doc(char *str)
+t_heredoc	*new_doc(char *str)
 {
-    t_heredoc *new;
+	t_heredoc	*new;
 
-    new = malloc(sizeof(t_heredoc));
-    if(!new)
-        return(NULL);
-    new->line = ft_strdup(str);
-    new->next = NULL;
-    return(new);
+	new = malloc(sizeof(t_heredoc));
+	if (!new)
+		return (NULL);
+	new->line = ft_strdup(str);
+	new->next = NULL;
+	return (new);
 }
 
-void    free_hrdc(t_heredoc **hrdc)
+void	free_hrdc(t_heredoc **hrdc)
 {
-    t_heredoc   *tmp;
-    while((*hrdc) != NULL)
-    {
-        tmp = *hrdc;
-        (*hrdc) = (*hrdc)->next;
-        free(tmp->line);
-        free(tmp);
-    }
+	t_heredoc	*tmp;
+
+	while ((*hrdc) != NULL)
+	{
+		tmp = *hrdc;
+		(*hrdc) = (*hrdc)->next;
+		free(tmp->line);
+		free(tmp);
+	}
 }
 
-void    print_heredoc(t_heredoc **hrdc)
+void	print_heredoc(t_heredoc **hrdc)
 {
-    t_heredoc *tmp;
+	t_heredoc	*tmp;
 
-    tmp = *hrdc;
-    while(tmp != NULL)
-    {
-        printf("%s\n", tmp->line);
-        tmp = tmp->next;
-    }
-    free_hrdc(hrdc);
+	tmp = *hrdc;
+	while (tmp != NULL)
+	{
+		printf("%s\n", tmp->line);
+		tmp = tmp->next;
+	}
+	free_hrdc(hrdc);
 }
 
-void heredoc(char *limit)
+void	heredoc(char *limit)
 {
-    char *line;
-    t_heredoc   *heredoc;
+	char		*line;
+	t_heredoc	*heredoc;
 
-    heredoc = malloc(sizeof(t_heredoc));
-    heredoc = NULL;
-    while(1)
-    {
-        line = readline("> ");
-        if(ft_strlen(line) > 0)
-        {
-            if(ft_strncmp(limit, line, ft_strlen(line)) != 0)
-                add_line(&heredoc, new_doc(line));
-            else
-            {
-                free(line);
-                break;
-            }
-            free(line);
-        }
-    }
-    print_heredoc(&heredoc);
-    free(heredoc);
+	heredoc = malloc(sizeof(t_heredoc));
+	heredoc = NULL;
+	while (1)
+	{
+		line = readline("> ");
+		if (ft_strlen(line) > 0)
+		{
+			if (ft_strncmp(limit, line, ft_strlen(line)) != 0)
+				add_line(&heredoc, new_doc(line));
+			else
+			{
+				free(line);
+				break ;
+			}
+			free(line);
+		}
+	}
+	print_heredoc(&heredoc);
+	free(heredoc);
 }

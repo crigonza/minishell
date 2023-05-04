@@ -1,93 +1,93 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/25 13:18:09 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 13:41:50 by itorres-         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/minishell.h"
 
-extern int exit_value;
+extern int g_exit_value;
 
-void echo_builtin(char **command)
+void	echo_builtin(char **command)
 {
-    if (!ft_strncmp(command[1], "-n", 2))
-        ft_putstr_fd(command[2], 1);
-    else
-        ft_putendl_fd(command[1], 1);
+	if (!ft_strncmp(command[1], "-n", 2))
+		ft_putstr_fd(command[2], 1);
+	else
+		ft_putendl_fd(command[1], 1);
 }
 
-void pwd_builtin(char **command)
+void	pwd_builtin(char **command)
 {
-    char *buff;
+	char	*buff;
 
-    if(!command[1])
-    {
-        buff = getcwd(NULL, 0); //añadido para poder liberarlo
-        ft_putendl_fd(buff, 1);
-        free(buff);
-        exit_value = 0;
-    }
-    else
-    {
-        ft_putendl_fd("pwd: too many arguments", 2);
-        exit_value = 256;
-    }
+	if (!command[1])
+	{
+		buff = getcwd(NULL, 0);
+		ft_putendl_fd(buff, 1);
+		free(buff);
+		g_exit_value = 0;
+	}
+	else
+	{
+		ft_putendl_fd("pwd: too many arguments", 2);
+		g_exit_value = 256;
+	}
 }
 
-void env_builtin(t_ev **envp, char **command)
+void	env_builtin(t_ev **envp, char **command)
 {
-    t_ev *tmp;
+	t_ev	*tmp;
 
-    tmp = *envp;
-    if(!command[1])
-    {
-        while(tmp != NULL)
-        {
-            printf("%s=%s\n", tmp->key, tmp->value);
-            tmp = tmp->next;
-        }
-        exit_value = 0;
-    }
-    else
-    {
-        ft_putendl_fd("env: too many arguments", 2); 
-        exit_value = 256;
-    }
+	tmp = *envp;
+	if (!command[1])
+	{
+		while (tmp != NULL)
+		{
+			printf("%s=%s\n", tmp->key, tmp->value);
+			tmp = tmp->next;
+		}
+		g_exit_value = 0;
+	}
+	else
+	{
+		ft_putendl_fd("env: too many arguments", 2); 
+		g_exit_value = 256;
+	}
 }
 
-void unset_builtin(t_ev **envp, char **command)
+void	unset_builtin(t_ev **envp, char **command)
 {
-    t_ev    *tmp;
-    t_ev    *prev;
+	t_ev	*tmp;
+	t_ev	*prev;
 
-    tmp = *envp;
-    if(!command[1])
-    {
-        ft_putendl_fd("unset: not enough arguments", 2);
-        exit_value = 256;
-    }
-    else
-    {
-        while(tmp != NULL)
-        {
-            if(!ft_strncmp(tmp->key, command[1], ft_strlen(command[1])))
-                break;
-            prev = tmp;
-            tmp = tmp->next;
-        }
-        if(tmp != NULL)
-        {
-            prev->next = tmp->next;
-            free(tmp->key);
-            free(tmp->value);
-            free(tmp);
-        }
-        exit_value = 0;
-    }
+	tmp = *envp;
+	if (!command[1])
+	{
+		ft_putendl_fd("unset: not enough arguments", 2);
+		g_exit_value = 256;
+	}
+	else
+	{
+		while (tmp != NULL)
+		{
+			if (!ft_strncmp(tmp->key, command[1], ft_strlen(command[1])))
+				break ;
+			prev = tmp;
+			tmp = tmp->next;
+		}
+		if (tmp != NULL)
+		{
+			prev->next = tmp->next;
+			free(tmp->key);
+			free(tmp->value);
+			free(tmp);
+		}
+		g_exit_value = 0;
+	}
 }

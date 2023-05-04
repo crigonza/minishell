@@ -1,69 +1,69 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:21:49 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/03 19:45:21 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 13:43:07 by itorres-         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
-# include "../inc/minishell.h"
+#include "../inc/minishell.h"
 
-int is_builtin(char *cmd)
+int	is_builtin(char *cmd)
 {
-    if(!ft_strncmp("echo", cmd, ft_strlen(cmd)))
-        return(1);
-    else if(!ft_strncmp("pwd", cmd, ft_strlen(cmd)))
-        return(1);
-    else if(!ft_strncmp("cd", cmd, ft_strlen(cmd)))
-        return(1);
-    else if(!ft_strncmp("env", cmd, ft_strlen(cmd)))
-        return(1);
-    else if(!ft_strncmp("export", cmd, ft_strlen(cmd)))
-        return(1);
-    else if(!ft_strncmp("unset", cmd, ft_strlen(cmd)))
-        return(1);
-    else
-        return(0);
+	if (!ft_strncmp("echo", cmd, ft_strlen(cmd)))
+		return (1);
+	else if (!ft_strncmp("pwd", cmd, ft_strlen(cmd)))
+		return (1);
+	else if (!ft_strncmp("cd", cmd, ft_strlen(cmd)))
+		return (1);
+	else if (!ft_strncmp("env", cmd, ft_strlen(cmd)))
+		return (1);
+	else if (!ft_strncmp("export", cmd, ft_strlen(cmd)))
+		return (1);
+	else if (!ft_strncmp("unset", cmd, ft_strlen(cmd)))
+		return (1);
+	else
+		return (0);
 }
 
-void builtin_exe(t_full_comm *cmd, t_ev **envp)
+void	builtin_exe(t_full_comm *cmd, t_ev **envp)
 {
-    char *com;
-    pid_t pid;
+	char	*com;
+	pid_t	pid;
 
-    com = cmd->command[0];
-    if(!ft_strncmp("export", com, ft_strlen(com)))
-        export_builtin(envp, cmd->command);
-    else if(!ft_strncmp("unset", com, ft_strlen(com)))
-        unset_builtin(envp, cmd->command);
-    else if(!ft_strncmp("cd", com, ft_strlen(com)))
-            cd_builtin(envp, cmd->command);
-    else
-    {
-        pid = fork();
-        if (pid == 0)
-        {
-            redir_solo_cmd(cmd);
-            if(!ft_strncmp("echo", com, ft_strlen(com)))
-                echo_builtin(cmd->command);
-            else if(!ft_strncmp("pwd", com, ft_strlen(com)))
-                pwd_builtin(cmd->command);
-            else if(!ft_strncmp("env", com, ft_strlen(com)))
-                env_builtin(envp, cmd->command);
-            exit(EXIT_SUCCESS);
-        }
-        else
-            waitpid(pid, NULL, 0);
-    }
+	com = cmd->command[0];
+	if (!ft_strncmp("export", com, ft_strlen(com)))
+		export_builtin(envp, cmd->command);
+	else if (!ft_strncmp("unset", com, ft_strlen(com)))
+		unset_builtin(envp, cmd->command);
+	else if (!ft_strncmp("cd", com, ft_strlen(com)))
+		cd_builtin(envp, cmd->command);
+	else
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			redir_solo_cmd(cmd);
+			if (!ft_strncmp("echo", com, ft_strlen(com)))
+				echo_builtin(cmd->command);
+			else if (!ft_strncmp("pwd", com, ft_strlen(com)))
+				pwd_builtin(cmd->command);
+			else if (!ft_strncmp("env", com, ft_strlen(com)))
+				env_builtin(envp, cmd->command);
+			exit(EXIT_SUCCESS);
+		}
+		else
+			waitpid(pid, NULL, 0);
+	}
 }
 
-void last_builtin_pipe(t_full_comm *cmd, t_ev **envp, int prpipe)
+void	last_builtin_pipe(t_full_comm *cmd, t_ev **envp, int prpipe)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid == 0)
@@ -80,10 +80,10 @@ void last_builtin_pipe(t_full_comm *cmd, t_ev **envp, int prpipe)
 	}
 }
 
-void builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe)
+void	builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe)
 {
-	int fd[2];
-	pid_t pid;
+	int		fd[2];
+	pid_t	pid;
 
 	pipe(fd);
 	pid = fork();
@@ -106,20 +106,20 @@ void builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe)
 	}
 }
 
-int check_key(t_ev **env, char *key, char *value)
+int	check_key(t_ev **env, char *key, char *value)
 {
-    t_ev    *tmp;
+	t_ev	*tmp;
 
-    tmp = *env;
-    while (tmp != NULL)
-    {
-        if(!ft_strncmp(key, tmp->key, ft_strlen(key)))
-        {
-            free(tmp->value);
-            tmp->value = value;
-            return(1);
-        }
-        tmp = tmp->next;
-    }
-    return(0);
+	tmp = *env;
+	while (tmp != NULL)
+	{
+		if (!ft_strncmp(key, tmp->key, ft_strlen(key)))
+		{
+			free(tmp->value);
+			tmp->value = value;
+			return (1);
+		}
+		tmp = tmp->next;
+	}
+	return (0);
 }

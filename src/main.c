@@ -1,18 +1,18 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:11:13 by crigonza          #+#    #+#             */
-/*   Updated: 2023/04/21 21:32:51 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 12:41:41 by itorres-         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #include "../inc/minishell.h"
 
-int	exit_value;
+int	g_exit_value;
 
 int	init_prompt(t_ev **env)
 {
@@ -25,38 +25,38 @@ int	init_prompt(t_ev **env)
 		config_signals();
 		prompt = readline("\e[34m""MiniShell$>""\x1b[m");
 		if (!prompt)
-        {
-            printf("exit\n");  // CTRL + D
-            exit(-1);
-        }
+		{
+			printf("exit\n");
+			exit(-1);
+		}
 		if (ft_strlen(prompt) > 0)
 		{
 			if (strncmp(prompt, "exit", 4) == 0)
 			{
 				exit_val = exit_v(prompt);
 				free(prompt);
-				break;
+				break ;
 			}
 			add_history(prompt);
 			init_lexer(prompt, env);
 			free (prompt);
-		}	  
+		}
 	}
-	return(exit_val);
+	return (exit_val);
 }
 
-int exit_v(char *prompt)
+int	exit_v(char *prompt)
 {
-	char *exit_arg;
-	int exit_val;
-	int i;
+	char	*exit_arg;
+	int		exit_val;
+	int		i;
 
 	i = 0;
 	exit_val = 0;
 	exit_arg = ft_substr(prompt, 5, ft_strlen(prompt) - 4);
 	if (exit_arg[i] == '-')
 		i++;
-	while(exit_arg[i] && ft_isalnum(exit_arg[i]))
+	while (exit_arg[i] && ft_isalnum(exit_arg[i]))
 		i++;
 	if (exit_arg[i] == '\0')
 		exit_val = ft_atoi(exit_arg);
@@ -69,7 +69,7 @@ int exit_v(char *prompt)
 	else
 		exit_val = exit_val % 256;
 	free(exit_arg);
-	return(exit_val);
+	return (exit_val);
 }
 
 void	free_envp(t_ev **env)
