@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/03 20:58:38 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 09:59:48 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,10 @@ void solo_cmd(t_full_comm *cmd, char **envp)
 	{
 		redir_solo_cmd(cmd);
 		exit_value = execve(cmd->command[0], cmd->command, envp);
-		if (exit_value == -1)
-		{
-			perror("Error");
-			exit(exit_value);
-		}
-		else 
-			exit(exit_value);
 	}
 }
 
-void first_child(char **cmd, char **envp, int *prpipe)
+void first_child(t_full_comm *cmd, char **envp, int *prpipe)
 {
 	int fd[2];
 	pid_t pid;
@@ -53,7 +46,8 @@ void first_child(char **cmd, char **envp, int *prpipe)
 		close(fd[1]);
 		dup2(*prpipe, STDIN_FILENO);
 		close(*prpipe);
-		execve(cmd[0], cmd, envp);
+		redir_solo_cmd(cmd);
+		execve(cmd->command[0], cmd->command, envp);
 	}
 	else
 	{
@@ -63,7 +57,7 @@ void first_child(char **cmd, char **envp, int *prpipe)
 	}
 }
 
-void last_child(char **cmd, char **envp, int prpipe)
+void last_child(t_full_comm *cmd, char **envp, int prpipe)
 {
 	pid_t pid;
 
@@ -72,7 +66,8 @@ void last_child(char **cmd, char **envp, int prpipe)
 	{
 		dup2 (prpipe, STDIN_FILENO);
 		close(prpipe);
-		execve(cmd[0], cmd, envp);
+		redir_solo_cmd(cmd);
+		execve(cmd->command[0], cmd->command, envp);
 	}
 	else
 	{
@@ -88,36 +83,37 @@ void exe_init(t_command *cmd)
 
 	env = convert_envp(cmd->env);
 	tmp = cmd->command;
-	while (tmp != NULL)
+	if(tmp->pipe_next == 1)
+		execute_pipe(&tmp, cmd->env, env);
+	else
+		execute(&tmp, cmd->env, env);
+	/* while (tmp != NULL)
 	{
-		if(tmp->next == NULL || tmp->semic_next == 1)
-			execute_semi(&tmp, cmd->env, env);
-		else if(tmp->pipe_next == 1)
-			tmp = execute_pipe(&tmp, cmd->env, env);
-		if (tmp != NULL)
-			tmp = tmp->next;
-	}
+		if(tmp->pipe_next == 1)
+			execute_pipe(&tmp, cmd->env, env);
+		else
+			execute(&tmp, cmd->env, env);
+		//if (tmp != NULL)
+		tmp = tmp->next;
+	} */
 	free_env_array(env);
 }
 
-void execute_semi(t_full_comm **cmd,t_ev **l_env, char **env)
+void execute(t_full_comm **cmd,t_ev **l_env, char **env)
 {
 	t_full_comm *tmp;
 
 	tmp = *cmd;
-	if(!is_builtin(tmp->command[0]))
+	if(!check_redir(tmp))
 	{
-		if(!check_redir(tmp))
+		if(!is_builtin(tmp->command[0]))
 			solo_cmd(tmp, env);
-	}
-	else
-	{
-		if(!check_redir(tmp))
+		else
 			builtin_exe(tmp, l_env);
 	}
 }
 
-t_full_comm *execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
+void 	execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
 {
 	t_full_comm *tmp;
 	int prpipe;
@@ -126,24 +122,22 @@ t_full_comm *execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
 	tmp = *cmd;
 	while (tmp != NULL)
 	{
+		check_redir(tmp);
 		if (tmp->pipe_next == 1)
 		{
 			if(!is_builtin(tmp->command[0]))
-				first_child(tmp->command, env, &prpipe);
+				first_child(tmp, env, &prpipe);
 			else
 				builtin_pipe(tmp, l_env, &prpipe);
 		}	
 		else
 		{
 			if(!is_builtin(tmp->command[0]))
-				last_child(tmp->command, env, prpipe);
+				last_child(tmp, env, prpipe);
 			else
 				last_builtin_pipe(tmp, l_env, prpipe);
 		}
-		while (wait(NULL) != -1);
-		if (tmp->semic_next == 1)
-			break;
+		while (wait(&exit_value) != -1);
 		tmp = tmp->next;
 	}
-	return(tmp);
 }

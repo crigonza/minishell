@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/03 21:07:10 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 09:55:13 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,7 @@ int	full_path(t_lexer **lexer, t_ev **env)
 			return(ret);
 		while(tmp != NULL)
 		{
-			if (tmp->token_type == PIPE || tmp->token_type == SEMICOLON)
+			if (tmp->token_type == PIPE)
 			{
 				tmp = tmp->next;
 				full_path(&tmp, env);
