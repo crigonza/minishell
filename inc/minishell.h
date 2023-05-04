@@ -1,14 +1,14 @@
-/* ************************************************************************** */
+/******************************************************************************/
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/04 10:54:00 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 12:17:03 by itorres-         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
+/******************************************************************************/
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -20,7 +20,6 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <fcntl.h>
-
 
 typedef struct s_lexer
 {
@@ -57,15 +56,15 @@ typedef struct s_command
 
 typedef struct s_ev
 {
-	char *key;
-	char *value;
-	struct s_ev *next;
+	char		*key;
+	char		*value;
+	struct s_ev	*next;
 }		t_ev;
 
 typedef struct s_heredoc
 {
-	char	*line;
-	struct s_heredoc *next;
+	char				*line;
+	struct s_heredoc	*next;
 }		t_heredoc;
 
 //main.c
@@ -95,7 +94,8 @@ char					*get_path(t_ev **env);
 t_full_comm				*last_command(t_full_comm *command);
 void					parser(t_lexer **lexer, t_ev **envp);
 void					parse_command(t_full_comm **command, t_lexer **lexer);
-void					add_command(t_full_comm **command, t_full_comm *new_command);
+void					add_command(t_full_comm **command, \
+							t_full_comm *new_command);
 void					free_command(t_full_comm **command);
 t_full_comm				*new_command(char **command, int pipe);
 char					*set_command(char *command);
@@ -110,8 +110,10 @@ void				execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env);
 //builtin_utils.c
 int						is_builtin(char *cmd);
 void					builtin_exe(t_full_comm *cmd, t_ev **envp);
-void					builtin_pipe(t_full_comm *cmd, t_ev **envp, int *prpipe);
-void					last_builtin_pipe(t_full_comm *cmd, t_ev **envp, int prpipe);
+void					builtin_pipe(t_full_comm *cmd, \
+							t_ev **envp, int *prpipe);
+void					last_builtin_pipe(t_full_comm *cmd, \
+							t_ev **envp, int prpipe);
 int						check_key(t_ev **env, char *key, char *value);
 //cd.c
 void					cd_builtin(t_ev **envp, char **command);
@@ -129,8 +131,8 @@ void					pwd_builtin(char **command);
 void					env_builtin(t_ev **envp, char **env);
 void					unset_builtin(t_ev **envp, char **command);
 //envp.c
-void 					set_envp(char **envp, t_ev **env);
-void    				free_env_array(char **env);
+void					set_envp(char **envp, t_ev **env);
+void					free_env_array(char **env);
 char					**convert_envp(t_ev **env);
 int						ev_len(t_ev **env);
 t_ev					*new_ev(char *key, char *value);
@@ -140,7 +142,8 @@ void					print_lexer(t_lexer **lexer);
 void					print_command(t_full_comm **command);
 void					freedonia(char **out);
 //signal.c
-void					process_signal(int signum, siginfo_t *info, void *context);
+void					process_signal(int signum, siginfo_t *info, \
+							void *context);
 void					config_signals(void);
 //heredoc.c
 void					add_line(t_heredoc **hrdc, t_heredoc *new_hrdc);
@@ -149,7 +152,7 @@ t_heredoc				*new_doc(char *str);
 void					free_hrdc(t_heredoc **hrdc);
 void					print_heredoc(t_heredoc **hrdc);
 //redir.c
-void    				file_in(t_full_comm *cmd, int i);
+void					file_in(t_full_comm *cmd, int i);
 void					file_out(t_full_comm *cmd, int i);
 int						check_redir(t_full_comm *cmd);
 void					redir_solo_cmd(t_full_comm *cmd);
