@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/04 09:46:53 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 10:56:08 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,31 @@ int	get_command(t_lexer **lexer, char *prompt)
 	return (i);
 }
 
-void	set_tokens(char prompt, t_lexer **lexer)
+int 	set_tokens(char first, char next, t_lexer **lexer)
 {
-	if (prompt == '|')
+	if (first == '|')
 		add_token(lexer, new_token("|", PIPE));
-	if (prompt == '<')
-		add_token(lexer, new_token("<", LESS_THAN));
-	if (prompt == '>')
-		add_token(lexer, new_token(">", GREATER_THAN));
+	if (first == '<')
+	{
+		if(next == '<')
+		{
+			add_token(lexer, new_token("<<", D_LESS_THAN));
+			return (2);
+		}
+		else
+			add_token(lexer, new_token("<", LESS_THAN));
+	}
+	if (first == '>')
+	{
+		if(next == '>')
+		{
+			add_token(lexer, new_token(">>", D_GREATER_THAN));
+			return 2;
+		}
+		else
+			add_token(lexer, new_token(">", GREATER_THAN));
+	}
+	return (1);
 }
 
 void	init_lexer(char *prompt, t_ev **envp)
@@ -150,10 +167,7 @@ void	init_lexer(char *prompt, t_ev **envp)
 		if (ft_isprint(prompt[i]) && prompt[i] != '|' && prompt[i] != '<' && prompt[i] != '>')
 			i += get_command(&lexer, &prompt[i]);
 		else
-		{
-			set_tokens(prompt[i], &lexer);
-			i++;
-		}
+			i += set_tokens(prompt[i],prompt[i + 1], &lexer);
 	}
 	print_lexer(&lexer);
 	if(lexer != NULL)

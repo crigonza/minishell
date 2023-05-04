@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/04 09:52:42 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/04 10:54:00 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int						get_string(t_lexer **lexer, char *prompt);
 int						get_command(t_lexer **lexer, char *prompt);
 int						get_num(t_lexer **lexer, char *prompt);
 void					tokenize_prompt(t_lexer **lexer, char prompt);
-void					set_tokens(char prompt, t_lexer **lexer);
+int						set_tokens(char first, char next, t_lexer **lexer);
 t_lexer					*new_token(char *content, int token_type);
 void					add_token(t_lexer **lexer, t_lexer *new);
 //expander.c
