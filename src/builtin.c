@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
@@ -6,13 +6,13 @@
 /*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/04 13:41:50 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/05 13:24:05 by itorres-         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-extern int g_exit_value;
+extern int	g_exit_value;
 
 void	echo_builtin(char **command)
 {
@@ -56,7 +56,7 @@ void	env_builtin(t_ev **envp, char **command)
 	}
 	else
 	{
-		ft_putendl_fd("env: too many arguments", 2); 
+		ft_putendl_fd("env: too many arguments", 2);
 		g_exit_value = 256;
 	}
 }

@@ -1,4 +1,4 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
@@ -6,9 +6,9 @@
 /*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:52:11 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/04 12:50:14 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/05 13:54:28 by itorres-         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
@@ -45,16 +45,9 @@ void	print_order_ev(t_ev **envp)
 	}
 }
 
-void	export_whout_args(t_ev **envp)
+void	export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*head, \
+								t_ev	*ordered_env)
 {
-	t_ev	*tmp;
-	t_ev	*env;
-	t_ev	*head;
-	t_ev	*ordered_env;
-
-	env = *envp;
-	tmp = NULL;
-	ordered_env = NULL;
 	while (env != NULL)
 	{
 		tmp = malloc(sizeof(t_ev));
@@ -73,6 +66,20 @@ void	export_whout_args(t_ev **envp)
 		}
 		env = env->next;
 	}
+}
+
+void	export_whout_args(t_ev **envp)
+{
+	t_ev	*tmp;
+	t_ev	*env;
+	t_ev	*head;
+	t_ev	*ordered_env;
+
+	env = *envp;
+	tmp = NULL;
+	ordered_env = NULL;
+	head = NULL;
+	export_whout_args_aux(tmp, env, head, ordered_env);
 	order_vars(&head);
 	print_order_ev(&head);
 	free_envp(&head);
@@ -91,28 +98,4 @@ void	export(t_ev **env, char *key, char *value)
 	}
 	export->next = tmp->next;
 	tmp->next = export;
-}
-
-void	export_builtin(t_ev **envp, char **command)
-{
-	char	*key;
-	char	*value;
-	int		i;
-
-	i = 0;
-	if (command[1])
-	{
-		while (command[1][i] != '=')
-			i++;
-		if (command[1][i] == '=' && i != 0)
-		{
-			value = ft_strdup(&command[1][i + 1]);
-			key = malloc(sizeof(char) * i + 1);
-			ft_strlcpy(key, command[1], i + 1);
-			if (!check_key(envp, key, value))
-				export(envp, key, value);
-		}
-	}
-	else
-		export_whout_args(envp);
 }
