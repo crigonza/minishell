@@ -6,7 +6,7 @@
 /*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:24:05 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/05 14:02:28 by itorres-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,13 @@ void	env_builtin(t_ev **envp, char **command)
 	}
 }
 
+void	free_tmp(t_ev	*tmp)
+{
+	free(tmp->key);
+	free(tmp->value);
+	free(tmp);
+}
+
 void	unset_builtin(t_ev **envp, char **command)
 {
 	t_ev	*tmp;
@@ -84,9 +91,7 @@ void	unset_builtin(t_ev **envp, char **command)
 		if (tmp != NULL)
 		{
 			prev->next = tmp->next;
-			free(tmp->key);
-			free(tmp->value);
-			free(tmp);
+			free_tmp(tmp);
 		}
 		g_exit_value = 0;
 	}
