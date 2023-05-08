@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:52:11 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:54:28 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/08 21:33:28 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,25 @@
 void	order_vars(t_ev **envp)
 {
 	t_ev	*tmp;
-	char	*aux;
-
-	tmp = *envp;
-	while (tmp->next != NULL)
+	t_ev	*aux;
+	int		change;
+	
+	change = 1;
+	aux = NULL;
+	while (change)
 	{
-		if (ft_strncmp(tmp->key, tmp->next->key, 2) > 0)
+		change = 0;
+		tmp = *envp;
+		while (tmp->next != aux)
 		{
-			aux = ft_strdup(tmp->key);
-			free(tmp->key);
-			tmp->key = ft_strdup(tmp->next->key);
-			free(tmp->next->key);
-			tmp->next->key = ft_strdup(aux);
-			free(aux);
+			if (ft_strcmp(tmp->key, tmp->next->key) > 0)
+			{
+				change_values(tmp, tmp->next);
+				change = 1;
+			}
+			tmp = tmp->next;
 		}
-		tmp = tmp->next;
+		aux = tmp;
 	}
 }
 
@@ -45,9 +49,11 @@ void	print_order_ev(t_ev **envp)
 	}
 }
 
-void	export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*head, \
-								t_ev	*ordered_env)
+t_ev	*export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*ordered_env)
 {
+	t_ev *head;
+
+	head = NULL;
 	while (env != NULL)
 	{
 		tmp = malloc(sizeof(t_ev));
@@ -66,6 +72,7 @@ void	export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*head, \
 		}
 		env = env->next;
 	}
+	return(head);
 }
 
 void	export_whout_args(t_ev **envp)
@@ -78,8 +85,7 @@ void	export_whout_args(t_ev **envp)
 	env = *envp;
 	tmp = NULL;
 	ordered_env = NULL;
-	head = NULL;
-	export_whout_args_aux(tmp, env, head, ordered_env);
+	head = export_whout_args_aux(tmp, env, ordered_env);
 	order_vars(&head);
 	print_order_ev(&head);
 	free_envp(&head);

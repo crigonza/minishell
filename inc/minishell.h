@@ -1,14 +1,14 @@
-/******************************************************************************/
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/04 12:17:03 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/08 21:50:55 by crigonza         ###   ########.fr       */
 /*                                                                            */
-/******************************************************************************/
+/* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -76,20 +76,26 @@ void					free_envp(t_ev **env);
 void					free_lexer(t_lexer **lexer);
 void					init_lexer(char *prompt, t_ev **envp);
 int						get_string(t_lexer **lexer, char *prompt);
-int						get_command(t_lexer **lexer, char *prompt);
-int						get_num(t_lexer **lexer, char *prompt);
-void					tokenize_prompt(t_lexer **lexer, char prompt);
-int						set_tokens(char first, char next, t_lexer **lexer);
 t_lexer					*new_token(char *content, int token_type);
 void					add_token(t_lexer **lexer, t_lexer *new);
+//lexer_utils.c
+int						get_command(t_lexer **lexer, char *prompt);
+int						set_tokens(char first, char next, t_lexer **lexer);
+int						close_quotes(char *prompt);
+int						check_echo_opt(t_lexer **lexer, char *prompt);
+int						get_echo_string(t_lexer **lexer, char *prompt);
 //expander.c
-int						full_path(t_lexer **lexer, t_ev **env);
-void					retokenize(t_lexer **lexer, t_ev **envp);
 void					expander(t_lexer **lexer, t_ev **envp);
 char					*get_envp(t_ev **env, char *content);
 char					*expand_envp(char *content, char *key, char *value);
-int						get_full_path(char **path, t_lexer *lex);
+int						check_squotes(char *str);
+void					expand_ret_val(t_lexer **lexer);
+//expander_utils.c
+void					sintax_error(char *cmd);
+void					retokenize(t_lexer **lexer, t_ev **envp);
 char					*get_path(t_ev **env);
+int						get_full_path(char **path, t_lexer *lex);
+int						full_path(t_lexer **lexer, t_ev **env);
 //parser.c
 t_full_comm				*last_command(t_full_comm *command);
 void					parser(t_lexer **lexer, t_ev **envp);
@@ -120,11 +126,14 @@ void					cd_builtin(t_ev **envp, char **command);
 void					change_pwd(t_ev **envp, char *path);
 void					cd_home(t_ev **envp);
 //export.c
-void					export_builtin(t_ev **envp, char **command);
 void					order_vars(t_ev **envp);
 void					print_order_ev(t_ev **envp);
 void					export_whout_args(t_ev **envp);
+t_ev					*export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*ordered_env);
 void					export(t_ev **env, char *key, char *value);
+//export_utils.c
+void					export_builtin(t_ev **envp, char **command);
+void					change_values(t_ev *current, t_ev *next);
 //builtin.c
 void					echo_builtin(char **command);
 void					pwd_builtin(char **command);
@@ -134,13 +143,13 @@ void					unset_builtin(t_ev **envp, char **command);
 void					set_envp(char **envp, t_ev **env);
 void					free_env_array(char **env);
 char					**convert_envp(t_ev **env);
-int						ev_len(t_ev **env);
 t_ev					*new_ev(char *key, char *value);
 void					add_ev(t_ev **env, t_ev *new);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_full_comm **command);
-void					freedonia(char **out);
+int						ft_strcmp(char *str1, char *str2);
+int						ev_len(t_ev **env);
 //signal.c
 void					process_signal(int signum, siginfo_t *info, \
 							void *context);

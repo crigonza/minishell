@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   envp.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 11:35:20 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:41:35 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/08 21:44:33 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,6 @@ void	add_ev(t_ev **env, t_ev *new)
 			tmp = tmp->next;
 		tmp->next = new;
 	}
-}
-
-int	ev_len(t_ev **env)
-{
-	int		i;
-	t_ev	*tmp;
-
-	i = 0;
-	tmp = *env;
-	while (tmp != NULL)
-	{
-		tmp = tmp->next;
-		i++;
-	}
-	return (i);
 }
 
 void	free_env_array(char **env)
@@ -87,4 +72,26 @@ char	**convert_envp(t_ev **env)
 	}
 	envp[i] = NULL;
 	return (envp);
+}
+
+void	set_envp(char **envp, t_ev **env)
+{
+	int		i;
+	int		j;
+	char	**vars;
+
+	i = 0;
+	while (envp[i])
+	{
+		vars = ft_split(envp[i], '=');
+		add_ev(env, new_ev(vars[0], vars[1]));
+		j = 0;
+		while (vars[j])
+		{
+			free(vars[j]);
+			j++;
+		}
+		free (vars);
+		i++;
+	}
 }

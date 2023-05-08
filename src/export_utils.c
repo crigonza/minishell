@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:54:42 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/05 13:55:26 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/08 21:33:24 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,23 @@ void	export_builtin(t_ev **envp, char **command)
 	}
 	else
 		export_whout_args(envp);
+}
+
+void 	change_values(t_ev *current, t_ev *next)
+{
+	char	*aux_key;
+	char	*aux_value;
+
+	aux_key = ft_strdup(current->key);
+	aux_value = ft_strdup(current->value);
+	free(current->key);
+	free(current->value);
+	current->key = ft_strdup(next->key);
+	current->value = ft_strdup(next->value);
+	free(next->key);
+	free(next->value);
+	next->key = ft_strdup(aux_key);
+	next->value = ft_strdup(aux_value);
+	free(aux_key);
+	free(aux_value);
 }

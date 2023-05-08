@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:34 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:21:51 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/08 21:43:43 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,29 @@ void	print_command(t_full_comm **command)
 		tmp = tmp->next;
 	}
 	printf("\n");
+}
+
+int	ft_strcmp(char *str1, char *str2)
+{
+	int i;
+
+	i = 0;
+	while(str1[i] == str2[i] && str1[i] && str2[i])
+		i++;
+	return(str1[i] - str2[i]);
+}
+
+int	ev_len(t_ev **env)
+{
+	int		i;
+	t_ev	*tmp;
+
+	i = 0;
+	tmp = *env;
+	while (tmp != NULL)
+	{
+		tmp = tmp->next;
+		i++;
+	}
+	return (i);
 }
