@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/08 21:50:55 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/09 08:35:25 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,14 +97,12 @@ char					*get_path(t_ev **env);
 int						get_full_path(char **path, t_lexer *lex);
 int						full_path(t_lexer **lexer, t_ev **env);
 //parser.c
-t_full_comm				*last_command(t_full_comm *command);
 void					parser(t_lexer **lexer, t_ev **envp);
 void					parse_command(t_full_comm **command, t_lexer **lexer);
 void					add_command(t_full_comm **command, \
 							t_full_comm *new_command);
 void					free_command(t_full_comm **command);
 t_full_comm				*new_command(char **command, int pipe);
-char					*set_command(char *command);
 //executer.c
 void					first_child(t_full_comm *cmd, char **envp, int *prpipe);
 void					last_child(t_full_comm *cmd, char **envp, int prpipe);
@@ -150,6 +148,7 @@ void					print_lexer(t_lexer **lexer);
 void					print_command(t_full_comm **command);
 int						ft_strcmp(char *str1, char *str2);
 int						ev_len(t_ev **env);
+int						get_count(t_lexer **lexer);
 //signal.c
 void					process_signal(int signum, siginfo_t *info, \
 							void *context);

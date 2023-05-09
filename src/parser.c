@@ -3,14 +3,56 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:28:58 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/09 08:34:41 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+void	parser(t_lexer **lexer, t_ev **envp)
+{
+	t_command	*command;
+
+	command = malloc(sizeof(t_command));
+	command->command = NULL;
+	command->env = envp;
+	parse_command(&command->command, lexer);
+	print_command(&command->command);
+	exe_init(command);
+	free_command(&command->command);
+	free(command);
+}
+
+void	parse_command(t_full_comm **command, t_lexer **lexer)
+{
+	char	**comm;
+	t_lexer	*tmp;
+	int		i;
+	int		pipe;
+
+	i = 0;
+	pipe = 0;
+	tmp = *lexer;
+	comm = malloc(sizeof(char *) * (get_count(lexer) + 1));
+	comm[get_count(lexer)] = NULL;
+	while (tmp != NULL && tmp->token_type != PIPE)
+	{
+		comm[i] = tmp->content;
+		tmp = tmp->next;
+		i++;
+	}
+	if (tmp != NULL && tmp->token_type == PIPE)
+		pipe = 1;
+	add_command(command, new_command(comm, pipe));
+	if (tmp != NULL && tmp->token_type == PIPE)
+	{
+		tmp = tmp->next;
+		parse_command(command, &tmp);
+	}
+}
 
 void	free_command(t_full_comm **command)
 {
@@ -25,13 +67,6 @@ void	free_command(t_full_comm **command)
 	}
 }
 
-t_full_comm	*last_command(t_full_comm *command)
-{
-	while (command->next != NULL)
-		command = command->next;
-	return (command);
-}
-
 void	add_command(t_full_comm **command, t_full_comm *new_command)
 {
 	t_full_comm	*tmp;
@@ -41,7 +76,8 @@ void	add_command(t_full_comm **command, t_full_comm *new_command)
 		*command = new_command;
 	else
 	{
-		tmp = last_command(*command);
+		while(tmp->next != NULL)
+			tmp = tmp->next;
 		tmp->next = new_command;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:34 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/08 21:43:43 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/09 08:36:02 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,19 @@ int	ev_len(t_ev **env)
 		i++;
 	}
 	return (i);
+}
+
+int	get_count(t_lexer **lexer)
+{
+	t_lexer	*tmp;
+	int		count;
+
+	count = 0;
+	tmp = *lexer;
+	while (tmp != NULL && tmp->token_type != PIPE)
+	{
+		tmp = tmp->next;
+		count++;
+	}
+	return (count);
 }
