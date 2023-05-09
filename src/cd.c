@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 19:21:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:18:09 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/09 10:59:06 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+extern int	g_exit_value;
 
 void	change_pwd(t_ev **envp, char *path)
 {
@@ -54,33 +56,33 @@ void	cd_home(t_ev **envp)
 		tmp = tmp->next;
 	}
 	change_pwd(envp, tmp->value);
+	g_exit_value = 0;
 }
 
 void	cd_builtin(t_ev **envp, char **command)
 {
 	int		val;
-	char	*buff;
+	char	*cd;
 
-	if (!command[2])
+	if (!command[1])
+		cd_home(envp);
+	else
 	{
 		val = chdir(command[1]);
 		if (val == -1)
 		{
-			ft_putstr_fd("cd: no such file or directory: ", 2);
-			ft_putendl_fd(command[1], 2);
+			ft_putstr_fd("minishell: cd: ", 2);
+			ft_putstr_fd(command[1], 2);
+			ft_putendl_fd("no such file or directory", 2);
+			g_exit_value = 1;
 		}
 		else
 		{
-			buff = getcwd(NULL, 0);
-			change_pwd(envp, buff);
-			free(buff);
+			cd = getcwd(NULL, 0);
+			change_pwd(envp, cd);
+			free(cd);
+			g_exit_value = 0;
 		}
 	}
-	else if (!command[1])
-		cd_home(envp);
-	else
-	{
-		ft_putstr_fd("cd: string not in pwd: ", 2);
-		ft_putendl_fd(command[1], 2);
-	}
+	
 }

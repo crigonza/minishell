@@ -6,7 +6,7 @@
 /*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:37:14 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/05 13:37:49 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/09 10:36:58 by itorres-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	get_full_path(char **path, t_lexer *lex)
 			if (!access(aux, X_OK))
 			{
 				free(lex->content);
+				free(pth);
 				lex->content = aux;
 				break ;
 			}

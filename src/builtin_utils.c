@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:21:49 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:21:06 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/09 12:27:41 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+extern int	g_exit_value;
 
 int	is_builtin(char *cmd)
 {
@@ -51,13 +53,15 @@ void	builtin_exe(t_full_comm *cmd, t_ev **envp)
 			if (!ft_strncmp("echo", com, ft_strlen(com)))
 				echo_builtin(cmd->command);
 			else if (!ft_strncmp("pwd", com, ft_strlen(com)))
-				pwd_builtin(cmd->command);
+				pwd_builtin();
 			else if (!ft_strncmp("env", com, ft_strlen(com)))
 				env_builtin(envp, cmd->command);
-			exit(EXIT_SUCCESS);
+			exit(g_exit_value);
 		}
 		else
-			waitpid(pid, NULL, 0);
+			waitpid(-1, &g_exit_value, 0);
+			if (g_exit_value > 0)
+				g_exit_value = 127;
 	}
 }
 

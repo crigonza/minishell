@@ -6,11 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:54:42 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/08 21:33:24 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/09 11:02:30 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+extern int	g_exit_value;
 
 void	export_builtin(t_ev **envp, char **command)
 {
@@ -34,6 +36,8 @@ void	export_builtin(t_ev **envp, char **command)
 	}
 	else
 		export_whout_args(envp);
+	g_exit_value = 0;
+	
 }
 
 void 	change_values(t_ev *current, t_ev *next)

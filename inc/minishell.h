@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 08:35:25 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/09 10:14:04 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ void					export_builtin(t_ev **envp, char **command);
 void					change_values(t_ev *current, t_ev *next);
 //builtin.c
 void					echo_builtin(char **command);
-void					pwd_builtin(char **command);
+void					pwd_builtin(void);
 void					env_builtin(t_ev **envp, char **env);
 void					unset_builtin(t_ev **envp, char **command);
 //envp.c

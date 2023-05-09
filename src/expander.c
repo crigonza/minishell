@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:36:59 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/09 12:42:35 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,27 @@ char	*expand_envp(char *content, char *key, char *value)
 {
 	int		i;
 	char	*expanded;
+	char	*expanded_out;
 	char	*back;
 
 	i = 0;
+	expanded_out = NULL;
 	if (content[i] != '$')
 	{
 		while (content[i] != '$')
 			i++;
 		expanded = malloc(sizeof(i) + 1);
 		ft_strlcpy(expanded, content, i + 1);
-		expanded = ft_strjoin(expanded, value);
+		expanded_out = ft_strjoin(expanded, value);
+		free(expanded);
 	}
 	else
 		expanded = value;
 	back = ft_strnstr(content, key, ft_strlen(content)) + ft_strlen(key);
-	expanded = ft_strjoin(expanded, back);
+	if (expanded_out != NULL && back != NULL)
+		expanded = ft_strjoin(expanded_out, back);
+	free(content);
+	free(expanded_out);
 	return (expanded);
 }
 
@@ -54,6 +60,7 @@ char	*get_envp(t_ev **env, char *content)
 		tmp = tmp->next;
 	}
 	expanded = content;
+	free(content);
 	return (expanded);
 }
 

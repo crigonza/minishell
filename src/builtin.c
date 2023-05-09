@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 14:02:28 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/09 11:16:27 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,14 @@ void	echo_builtin(char **command)
 		ft_putendl_fd(command[1], 1);
 }
 
-void	pwd_builtin(char **command)
+void	pwd_builtin(void)
 {
-	char	*buff;
+	char	*pwd;
 
-	if (!command[1])
-	{
-		buff = getcwd(NULL, 0);
-		ft_putendl_fd(buff, 1);
-		free(buff);
-		g_exit_value = 0;
-	}
-	else
-	{
-		ft_putendl_fd("pwd: too many arguments", 2);
-		g_exit_value = 256;
-	}
+	pwd = getcwd(NULL, 0);
+	ft_putendl_fd(pwd, 1);
+	free(pwd);
+	g_exit_value = 0;
 }
 
 void	env_builtin(t_ev **envp, char **command)
@@ -56,8 +48,10 @@ void	env_builtin(t_ev **envp, char **command)
 	}
 	else
 	{
-		ft_putendl_fd("env: too many arguments", 2);
-		g_exit_value = 256;
+		ft_putstr_fd("env: ", 2);
+		ft_putstr_fd(command[1], 2);
+		ft_putendl_fd(": No such file or directory", 2);
+		g_exit_value = 127;
 	}
 }
 
@@ -74,12 +68,7 @@ void	unset_builtin(t_ev **envp, char **command)
 	t_ev	*prev;
 
 	tmp = *envp;
-	if (!command[1])
-	{
-		ft_putendl_fd("unset: not enough arguments", 2);
-		g_exit_value = 256;
-	}
-	else
+	if (command[1])
 	{
 		while (tmp != NULL)
 		{
