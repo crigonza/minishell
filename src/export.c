@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:52:11 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 11:02:04 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 09:13:14 by itorres-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	order_vars(t_ev **envp)
 	t_ev	*tmp;
 	t_ev	*aux;
 	int		change;
-	
+
 	change = 1;
 	aux = NULL;
 	while (change)
@@ -51,7 +51,7 @@ void	print_order_ev(t_ev **envp)
 
 t_ev	*export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*ordered_env)
 {
-	t_ev *head;
+	t_ev	*head;
 
 	head = NULL;
 	while (env != NULL)
@@ -72,7 +72,7 @@ t_ev	*export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*ordered_env)
 		}
 		env = env->next;
 	}
-	return(head);
+	return (head);
 }
 
 void	export_whout_args(t_ev **envp)
