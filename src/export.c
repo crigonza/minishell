@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:52:11 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 09:13:14 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:32:44 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	print_order_ev(t_ev **envp)
 	}
 }
 
-t_ev	*export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*ordered_env)
+t_ev	*export_whout_args_aux(t_ev *tmp, t_ev *env, t_ev *ordered_env)
 {
 	t_ev	*head;
 

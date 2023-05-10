@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:34 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 08:36:02 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:34:15 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ void	print_command(t_full_comm **command)
 
 int	ft_strcmp(char *str1, char *str2)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str1[i] == str2[i] && str1[i] && str2[i])
+	while (str1[i] == str2[i] && str1[i] && str2[i])
 		i++;
-	return(str1[i] - str2[i]);
+	return (str1[i] - str2[i]);
 }
 
 int	ev_len(t_ev **env)

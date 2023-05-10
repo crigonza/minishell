@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:35:47 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:33:15 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void	init_lexer(char *prompt, t_ev **envp)
 			i++;
 		if (prompt[i] == 34)
 			i += get_string(&lexer, &prompt[i + 1]);
-		if (ft_isprint(prompt[i]) && prompt[i] != '|' \
-			&& prompt[i] != '<' && prompt[i] != '>')
+		if (ft_isprint(prompt[i]) && prompt[i] != '|' && prompt[i] != '<'
+			&& prompt[i] != '>')
 			i += get_command(&lexer, &prompt[i]);
 		else
 			i += set_tokens(prompt[i], prompt[i + 1], &lexer);

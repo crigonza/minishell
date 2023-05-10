@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/13 19:21:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 10:59:06 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:30:35 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	change_pwd(t_ev **envp, char *path)
 	while (pwd != NULL)
 	{
 		if (!ft_strncmp(pwd->key, "PWD", 3))
-			break ;
+			break ; ∫
 		pwd = pwd->next;
 	}
 	while (old_pwd != NULL)

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:37:14 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/10 21:08:14 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:32:01 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,10 @@ void	get_full_path(char **path, t_lexer *lex)
 
 void	full_path(t_lexer **lexer, t_ev **env)
 {
-	t_lexer	*tmp;
-	char	*path;
-	char	**split_path;
-	int		i;
+	t_lexer *tmp;
+	char *path;
+	char **split_path;
+	int i;
 
 	i = 0;
 	tmp = *lexer;

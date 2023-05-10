@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 21:46:19 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:33:42 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 	while (tmp != NULL && tmp->token_type != PIPE && redir != 2)
 	{
 		if (redir == 1)
-			redir ++;
-		if(tmp->token_type == D_LESS_THAN)
+			redir++;
+		if (tmp->token_type == D_LESS_THAN)
 			redir = 1;
 		comm[i] = tmp->content;
 		tmp = tmp->next;
@@ -55,7 +55,7 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 	add_command(command, new_command(comm, pipe));
 	if (tmp != NULL && (tmp->token_type == PIPE || redir == 2))
 	{
-		if(redir != 2)
+		if (redir != 2)
 			tmp = tmp->next;
 		parse_command(command, &tmp);
 	}
@@ -83,7 +83,7 @@ void	add_command(t_full_comm **command, t_full_comm *new_command)
 		*command = new_command;
 	else
 	{
-		while(tmp->next != NULL)
+		while (tmp->next != NULL)
 			tmp = tmp->next;
 		tmp->next = new_command;
 	}

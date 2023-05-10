@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:11:13 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 13:35:44 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:33:23 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	finish_init(char *prompt, t_ev **env)
 {
 	add_history(prompt);
 	init_lexer(prompt, env);
-	free (prompt);
+	free(prompt);
 }
 
 int	init_prompt(t_ev **env)
@@ -28,7 +28,9 @@ int	init_prompt(t_ev **env)
 	while (1)
 	{
 		config_signals();
-		prompt = readline("\e[34m""MiniShell$>""\x1b[m");
+		prompt = readline("\e[34m"
+							"MiniShell$>"
+							"\x1b[m");
 		if (!prompt)
 		{
 			printf("exit\n");
@@ -102,5 +104,5 @@ int	main(int argc, char **argv, char **envp)
 	free_envp(&env);
 	rl_clear_history();
 	system("leaks -q --fullStacks --list minishell");
-	exit (exval);
+	exit(exval);
 }

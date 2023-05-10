@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 21:33:55 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:31:50 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void	first_child(t_full_comm *cmd, char **envp, int *prpipe)
 		dup2(*prpipe, STDIN_FILENO);
 		close(*prpipe);
 		redir_solo_cmd(cmd);
-		if(execve(cmd->command[0], cmd->command, envp) == -1)
+		if (execve(cmd->command[0], cmd->command, envp) == -1)
 			syntax_error(cmd->command[0]);
 	}
 	else
 	{
 		close(fd[1]);
-		close (*prpipe);
+		close(*prpipe);
 		*prpipe = fd[0];
 		waitpid(-1, &g_exit_value, 0);
 	}
@@ -48,10 +48,10 @@ void	last_child(t_full_comm *cmd, char **envp, int prpipe)
 	pid = fork();
 	if (pid == 0)
 	{
-		dup2 (prpipe, STDIN_FILENO);
+		dup2(prpipe, STDIN_FILENO);
 		close(prpipe);
 		redir_solo_cmd(cmd);
-		if(execve(cmd->command[0], cmd->command, envp) == -1)
+		if (execve(cmd->command[0], cmd->command, envp) == -1)
 			syntax_error(cmd->command[0]);
 	}
 	else
@@ -72,7 +72,7 @@ void	exe_init(t_command *cmd)
 		execute_pipe(&tmp, cmd->env, env);
 	else
 		execute(&tmp, cmd->env, env);
-	if(g_exit_value > 1 && g_exit_value != 256 )
+	if (g_exit_value > 1 && g_exit_value != 256)
 		g_exit_value = 127;
 	free_env_array(env);
 }
@@ -107,7 +107,7 @@ void	execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
 				first_child(tmp, env, &prpipe);
 			else
 				builtin_pipe(tmp, l_env, &prpipe);
-		}	
+		}
 		else
 		{
 			if (!is_builtin(tmp->command[0]))

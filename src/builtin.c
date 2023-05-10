@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 16:46:18 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:30:39 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	env_builtin(t_ev **envp, char **command)
 	}
 }
 
-void	free_tmp(t_ev	*tmp)
+void	free_tmp(t_ev *tmp)
 {
 	free(tmp->key);
 	free(tmp->value);

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 18:33:30 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:32:14 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ char	*get_envp(t_ev **env, char *content)
 		}
 		tmp = tmp->next;
 	}
-	while(content[i] != '$')
+	while (content[i] != '$')
 		i++;
 	expanded = malloc(sizeof(i + 1));
 	ft_strlcpy(expanded, content, i + 1);
-	free (content);
+	free(content);
 	return (expanded);
 }
 

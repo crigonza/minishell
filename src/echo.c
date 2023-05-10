@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:57:40 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 18:18:09 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:30:55 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	close_quotes(char *prompt)
 	while (prompt[i])
 	{
 		if (prompt[i] == 34)
-			quote ++;
+			quote++;
 		i++;
 	}
 	return (quote);
@@ -44,14 +44,14 @@ int	check_echo_opt(t_lexer **lexer, char *prompt)
 		return (0);
 }
 
-int without_quotes(t_lexer **lexer, char *prompt)
+int	without_quotes(t_lexer **lexer, char *prompt)
 {
-	int i;
-	char *str;
+	int		i;
+	char	*str;
 
 	i = 0;
-	while ((prompt[i]) && (prompt[i] != '|') \
-			&& (prompt[i] != '<') && (prompt[i] != '>'))
+	while ((prompt[i]) && (prompt[i] != '|') && (prompt[i] != '<')
+		&& (prompt[i] != '>'))
 		i++;
 	if (prompt[i] == '|' && prompt[i - 1] == ' ')
 	{
@@ -66,24 +66,24 @@ int without_quotes(t_lexer **lexer, char *prompt)
 	return (i);
 }
 
-char *clean_quotes(char *prompt, int quotes, int len)
+char	*clean_quotes(char *prompt, int quotes, int len)
 {
-	int i;
-	int j;
-	char *str;
+	int		i;
+	int		j;
+	char	*str;
 
 	i = 0;
 	j = 0;
 	str = malloc(sizeof(len + 1 - quotes));
-	while(i < len)
+	while (i < len)
 	{
-		while(prompt[i] == 34)
+		while (prompt[i] == 34)
 			i++;
 		str[j] = prompt[i];
 		j++;
 		i++;
 	}
-    prompt[i] = '\0';
+	prompt[i] = '\0';
 	return (str);
 }
 
@@ -93,8 +93,8 @@ int	with_quotes(t_lexer **lexer, char *prompt, int quotes)
 	char *str;
 
 	i = 0;
-	while ((prompt[i]) && (prompt[i] != '|') \
-			&& (prompt[i] != '<') && (prompt[i] != '>'))
+	while ((prompt[i]) && (prompt[i] != '|') && (prompt[i] != '<')
+		&& (prompt[i] != '>'))
 		i++;
 	if (prompt[i] == '|' && prompt[i - 1] == ' ')
 	{
@@ -105,5 +105,5 @@ int	with_quotes(t_lexer **lexer, char *prompt, int quotes)
 	str = clean_quotes(prompt, quotes, i);
 	add_token(lexer, new_token(str, STRING));
 	free(str);
-	return(i);
+	return (i);
 }

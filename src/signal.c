@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:16:33 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/05 13:17:04 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:34:03 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 void	process_signal(int signum, siginfo_t *info, void *context)
-{		
+{
 	pid_t	pid;
 	int		status;
 
-	(void) signum;
-	(void) context;
-	(void) info;
+	(void)signum;
+	(void)context;
+	(void)info;
 	pid = waitpid(-1, &status, WNOHANG);
 	if (pid == 0)
 		write(1, "\n", 1);

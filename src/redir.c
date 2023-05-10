@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:49:07 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 21:49:25 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:33:53 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	file_in(t_full_comm *cmd, int i)
 }
 
 int	check_redir_aux(t_full_comm *cmd, int i)
-{	
+{
 	if (!cmd->command[1] && !ft_strncmp(cmd->command[0], "<<", 2))
 	{
 		ft_putstr_fd("minishell: syntax error ", 2);
@@ -60,7 +60,7 @@ int	check_redir_aux(t_full_comm *cmd, int i)
 			return (0);
 		else */
 		return (1);
-	}	
+	}
 }
 
 int	check_redir(t_full_comm *cmd)

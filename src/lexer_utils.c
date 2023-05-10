@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:30:30 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/10 18:35:22 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:33:01 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	get_echo_string(t_lexer **lexer, char *prompt)
 {
-	int		i;
-	int		quotes;
+	int	i;
+	int	quotes;
 
 	i = 0;
 	quotes = close_quotes(prompt);
@@ -36,9 +36,8 @@ int	get_command(t_lexer **lexer, char *prompt)
 	i = 0;
 	while (prompt[i] == '-')
 		i++;
-	while (prompt[i] && prompt[i] != '\t' \
-		&& prompt[i] != ' ' && prompt[i] != '|' \
-		&& prompt[i] != '<' && prompt[i] != '>')
+	while (prompt[i] && prompt[i] != '\t' && prompt[i] != ' '
+		&& prompt[i] != '|' && prompt[i] != '<' && prompt[i] != '>')
 		i++;
 	str = malloc(sizeof(i + 1));
 	ft_strlcpy(str, prompt, i + 1);
