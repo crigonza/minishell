@@ -6,13 +6,18 @@
 /*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:11:13 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:20:03 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/09 13:35:44 by itorres-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int	g_exit_value;
+void	finish_init(char *prompt, t_ev **env)
+{
+	add_history(prompt);
+	init_lexer(prompt, env);
+	free (prompt);
+}
 
 int	init_prompt(t_ev **env)
 {
@@ -37,9 +42,7 @@ int	init_prompt(t_ev **env)
 				free(prompt);
 				break ;
 			}
-			add_history(prompt);
-			init_lexer(prompt, env);
-			free (prompt);
+			finish_init(prompt, env);
 		}
 	}
 	return (exit_val);
@@ -98,6 +101,6 @@ int	main(int argc, char **argv, char **envp)
 	exval = init_prompt(&env);
 	free_envp(&env);
 	rl_clear_history();
-	system("leaks -q minishell");
+	system("leaks -q --fullStacks --list minishell");
 	exit (exval);
 }
