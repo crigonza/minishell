@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:34 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:34:15 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:45:50 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,11 @@ int	get_count(t_lexer **lexer)
 		count++;
 	}
 	return (count);
+}
+
+void	free_tmp(t_ev *tmp)
+{
+	free(tmp->key);
+	free(tmp->value);
+	free(tmp);
 }

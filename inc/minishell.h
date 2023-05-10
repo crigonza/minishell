@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:35:32 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:45:46 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_heredoc
 
 //builtin_utils.c
 int						is_builtin(char *cmd);
-void					builtin_exe(t_full_comm *cmd, t_ev **envp);
+void					builtin_exe_pid(t_full_comm *cmd, t_ev **envp);
 void	last_builtin_pipe(t_full_comm *cmd,
 						t_ev **envp,
 						int prpipe);
@@ -83,8 +83,8 @@ int						check_key(t_ev **env, char *key, char *value);
 void					echo_builtin(char **command);
 void					pwd_builtin(void);
 void					env_builtin(t_ev **envp, char **command);
-void					free_tmp(t_ev *tmp);
 void					unset_builtin(t_ev **envp, char **command);
+void					builtin_exe(t_full_comm *cmd, t_ev **envp);
 //cd.c
 void					change_pwd(t_ev **envp, char *path);
 void					cd_home(t_ev **envp);
@@ -179,5 +179,7 @@ void					print_command(t_full_comm **command);
 int						ft_strcmp(char *str1, char *str2);
 int						ev_len(t_ev **env);
 int						get_count(t_lexer **lexer);
+void					free_tmp(t_ev *tmp);
+
 
 #endif

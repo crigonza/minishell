@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:30:39 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:44:46 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,6 @@ void	env_builtin(t_ev **envp, char **command)
 	}
 }
 
-void	free_tmp(t_ev *tmp)
-{
-	free(tmp->key);
-	free(tmp->value);
-	free(tmp);
-}
-
 void	unset_builtin(t_ev **envp, char **command)
 {
 	t_ev	*tmp;
@@ -84,5 +77,22 @@ void	unset_builtin(t_ev **envp, char **command)
 			free_tmp(tmp);
 		}
 		g_exit_value = 0;
+	}
+}
+
+void	builtin_exe(t_full_comm *cmd, t_ev **envp)
+{
+	char	*com;
+
+	com = cmd->command[0];
+	if (!ft_strncmp("export", com, ft_strlen(com)))
+		export_builtin(envp, cmd->command);
+	else if (!ft_strncmp("unset", com, ft_strlen(com)))
+		unset_builtin(envp, cmd->command);
+	else if (!ft_strncmp("cd", com, ft_strlen(com)))
+		cd_builtin(envp, cmd->command);
+	else
+	{
+		builtin_exe_pid(cmd, envp);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/27 18:21:49 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:29:35 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:48:33 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,35 +32,26 @@ int	is_builtin(char *cmd)
 		return (0);
 }
 
-void	builtin_exe(t_full_comm *cmd, t_ev **envp)
+void	builtin_exe_pid(t_full_comm *cmd, t_ev **envp)
 {
-	char	*com;
 	pid_t	pid;
+	char	*com;
 
+	pid = fork();
 	com = cmd->command[0];
-	if (!ft_strncmp("export", com, ft_strlen(com)))
-		export_builtin(envp, cmd->command);
-	else if (!ft_strncmp("unset", com, ft_strlen(com)))
-		unset_builtin(envp, cmd->command);
-	else if (!ft_strncmp("cd", com, ft_strlen(com)))
-		cd_builtin(envp, cmd->command);
-	else
+	if (pid == 0)
 	{
-		pid = fork();
-		if (pid == 0)
-		{
-			redir_solo_cmd(cmd);
-			if (!ft_strncmp("echo", com, ft_strlen(com)))
-				echo_builtin(cmd->command);
-			else if (!ft_strncmp("pwd", com, ft_strlen(com)))
-				pwd_builtin();
-			else if (!ft_strncmp("env", com, ft_strlen(com)))
-				env_builtin(envp, cmd->command);
-			exit(g_exit_value);
-		}
-		else
-			waitpid(pid, &g_exit_value, 0);
+		redir_solo_cmd(cmd);
+		if (!ft_strncmp("echo", com, ft_strlen(com)))
+			echo_builtin(cmd->command);
+		else if (!ft_strncmp("pwd", com, ft_strlen(com)))
+			pwd_builtin();
+		else if (!ft_strncmp("env", com, ft_strlen(com)))
+			env_builtin(envp, cmd->command);
+		exit(g_exit_value);
 	}
+	else
+		waitpid(pid, &g_exit_value, 0);
 }
 
 void	last_builtin_pipe(t_full_comm *cmd, t_ev **envp, int prpipe)
