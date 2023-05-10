@@ -6,31 +6,13 @@
 /*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:39:17 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 09:05:36 by itorres-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 extern int	g_exit_value;
-
-void	solo_cmd(t_full_comm *cmd, char **envp)
-{
-	pid_t	pid;
-
-	pid = fork();
-	if (pid < 0)
-		perror("Error");
-	else if (pid > 0)
-	{
-		waitpid(pid, &g_exit_value, 0);
-	}
-	else if (pid == 0)
-	{
-		redir_solo_cmd(cmd);
-		g_exit_value = execve(cmd->command[0], cmd->command, envp);
-	}
-}
 
 void	first_child(t_full_comm *cmd, char **envp, int *prpipe)
 {
