@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 08:34:41 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 21:46:19 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,20 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 	t_lexer	*tmp;
 	int		i;
 	int		pipe;
+	int		redir;
 
 	i = 0;
 	pipe = 0;
+	redir = 0;
 	tmp = *lexer;
 	comm = malloc(sizeof(char *) * (get_count(lexer) + 1));
 	comm[get_count(lexer)] = NULL;
-	while (tmp != NULL && tmp->token_type != PIPE)
+	while (tmp != NULL && tmp->token_type != PIPE && redir != 2)
 	{
+		if (redir == 1)
+			redir ++;
+		if(tmp->token_type == D_LESS_THAN)
+			redir = 1;
 		comm[i] = tmp->content;
 		tmp = tmp->next;
 		i++;
@@ -47,9 +53,10 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 	if (tmp != NULL && tmp->token_type == PIPE)
 		pipe = 1;
 	add_command(command, new_command(comm, pipe));
-	if (tmp != NULL && tmp->token_type == PIPE)
+	if (tmp != NULL && (tmp->token_type == PIPE || redir == 2))
 	{
-		tmp = tmp->next;
+		if(redir != 2)
+			tmp = tmp->next;
 		parse_command(command, &tmp);
 	}
 }

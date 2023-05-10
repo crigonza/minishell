@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 12:42:35 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 18:33:30 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ char	*get_envp(t_ev **env, char *content)
 	char	*var;
 	char	*expanded;
 	t_ev	*tmp;
+	int		i;
 
+	i = 0;
 	tmp = *env;
 	var = ft_strchr(content, '$') + 1;
 	while (tmp != NULL)
@@ -59,8 +61,11 @@ char	*get_envp(t_ev **env, char *content)
 		}
 		tmp = tmp->next;
 	}
-	expanded = content;
-	free(content);
+	while(content[i] != '$')
+		i++;
+	expanded = malloc(sizeof(i + 1));
+	ft_strlcpy(expanded, content, i + 1);
+	free (content);
 	return (expanded);
 }
 
@@ -99,12 +104,12 @@ void	expand_ret_val(t_lexer **lexer)
 		if (!ft_strncmp(tmp->content, "$?", ft_strlen(tmp->content)))
 		{
 			free(tmp->content);
-			if (g_exit_value == 256)
+			if (g_exit_value == 256 || g_exit_value == 1)
 				tmp->content = ft_itoa(1);
 			else if (g_exit_value == 127)
 				tmp->content = ft_itoa(127);
-			else
-				tmp->content = ft_itoa(exit_v(ft_itoa(g_exit_value)));
+			else if (g_exit_value == 0)
+				tmp->content = ft_itoa(0);
 		}
 		tmp = tmp->next;
 	}

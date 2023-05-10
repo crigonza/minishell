@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/16 19:01:33 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:20:19 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 23:21:19 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	heredoc(char *limit)
 	char		*line;
 	t_heredoc	*heredoc;
 
-	heredoc = malloc(sizeof(t_heredoc));
 	heredoc = NULL;
 	while (1)
 	{

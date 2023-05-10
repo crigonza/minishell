@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:37:14 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/09 10:36:58 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 21:08:14 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 extern int	g_exit_value;
 
-void	sintax_error(char *cmd)
+void	syntax_error(char *cmd)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd, 2);
 	ft_putendl_fd(": command not found", 2);
-	g_exit_value = 127;
+	exit(127);
 }
 
 void	retokenize(t_lexer **lexer, t_ev **envp)
@@ -42,10 +42,8 @@ void	retokenize(t_lexer **lexer, t_ev **envp)
 		}
 		tmp = tmp->next;
 	}
-	if (!full_path(lexer, envp))
-		expander(lexer, envp);
-	else
-		sintax_error((*lexer)->content);
+	full_path(lexer, envp);
+	expander(lexer, envp);
 }
 
 char	*get_path(t_ev **env)
@@ -64,7 +62,7 @@ char	*get_path(t_ev **env)
 	return (tmp->value);
 }
 
-int	get_full_path(char **path, t_lexer *lex)
+void	get_full_path(char **path, t_lexer *lex)
 {
 	int		i;
 	char	*aux;
@@ -88,36 +86,29 @@ int	get_full_path(char **path, t_lexer *lex)
 			free(pth);
 			i++;
 		}
-		if (!path[i])
-			return (1);
 	}
-	return (0);
 }
 
-int	full_path(t_lexer **lexer, t_ev **env)
+void	full_path(t_lexer **lexer, t_ev **env)
 {
 	t_lexer	*tmp;
 	char	*path;
 	char	**split_path;
-	int		ret;
 	int		i;
 
 	i = 0;
-	ret = 0;
 	tmp = *lexer;
 	path = get_path(env);
 	if (path != NULL)
 	{
 		split_path = ft_split(path, ':');
-		ret = get_full_path(split_path, tmp);
+		get_full_path(split_path, tmp);
 		while (split_path[i])
 		{
 			free(split_path[i]);
 			i++;
 		}
 		free(split_path);
-		if (ret == 1)
-			return (ret);
 		while (tmp != NULL)
 		{
 			if (tmp->token_type == PIPE)
@@ -128,5 +119,4 @@ int	full_path(t_lexer **lexer, t_ev **env)
 			tmp = tmp->next;
 		}
 	}
-	return (ret);
 }

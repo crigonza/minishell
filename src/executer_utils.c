@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 09:04:48 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/10 09:05:38 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 20:55:42 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	solo_cmd(t_full_comm *cmd, char **envp)
 	else if (pid == 0)
 	{
 		redir_solo_cmd(cmd);
-		g_exit_value = execve(cmd->command[0], cmd->command, envp);
+		execve(cmd->command[0], cmd->command, envp);
+		if(execve(cmd->command[0], cmd->command, envp) == -1)
+			syntax_error(cmd->command[0]);
 	}
 }

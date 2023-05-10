@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 09:05:36 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 21:33:55 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,15 @@ void	first_child(t_full_comm *cmd, char **envp, int *prpipe)
 		dup2(*prpipe, STDIN_FILENO);
 		close(*prpipe);
 		redir_solo_cmd(cmd);
-		execve(cmd->command[0], cmd->command, envp);
+		if(execve(cmd->command[0], cmd->command, envp) == -1)
+			syntax_error(cmd->command[0]);
 	}
 	else
 	{
 		close(fd[1]);
 		close (*prpipe);
 		*prpipe = fd[0];
+		waitpid(-1, &g_exit_value, 0);
 	}
 }
 
@@ -49,12 +51,13 @@ void	last_child(t_full_comm *cmd, char **envp, int prpipe)
 		dup2 (prpipe, STDIN_FILENO);
 		close(prpipe);
 		redir_solo_cmd(cmd);
-		execve(cmd->command[0], cmd->command, envp);
+		if(execve(cmd->command[0], cmd->command, envp) == -1)
+			syntax_error(cmd->command[0]);
 	}
 	else
 	{
 		close(prpipe);
-		while (wait(NULL) != -1);
+		waitpid(pid, &g_exit_value, 0);
 	}
 }
 
@@ -69,15 +72,8 @@ void	exe_init(t_command *cmd)
 		execute_pipe(&tmp, cmd->env, env);
 	else
 		execute(&tmp, cmd->env, env);
-	/* while (tmp != NULL)
-	{
-		if(tmp->pipe_next == 1)
-			execute_pipe(&tmp, cmd->env, env);
-		else
-			execute(&tmp, cmd->env, env);
-		//if (tmp != NULL)
-		tmp = tmp->next;
-	} */
+	if(g_exit_value > 1 && g_exit_value != 256 )
+		g_exit_value = 127;
 	free_env_array(env);
 }
 
@@ -119,7 +115,6 @@ void	execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
 			else
 				last_builtin_pipe(tmp, l_env, prpipe);
 		}
-		while (wait(&g_exit_value) != -1);
 		tmp = tmp->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 11:16:27 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 16:46:18 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	echo_builtin(char **command)
 		ft_putstr_fd(command[2], 1);
 	else
 		ft_putendl_fd(command[1], 1);
+	g_exit_value = 0;
 }
 
 void	pwd_builtin(void)

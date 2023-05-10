@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:49:07 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/05 13:19:05 by itorres-         ###   ########.fr       */
+/*   Updated: 2023/05/10 21:49:25 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,20 +46,20 @@ void	file_in(t_full_comm *cmd, int i)
 
 int	check_redir_aux(t_full_comm *cmd, int i)
 {	
-	if (!cmd->command[1])
+	if (!cmd->command[1] && !ft_strncmp(cmd->command[0], "<<", 2))
 	{
-		ft_putendl_fd("minishell: syntax error \
-		near unexpected token `newline'", 2);
+		ft_putstr_fd("minishell: syntax error ", 2);
+		ft_putendl_fd("near unexpected token `newline'", 2);
 		g_exit_value = 256;
 		return (1);
 	}
 	else
 	{
 		heredoc(cmd->command[i + 1]);
-		if (cmd->command[i + 2])
+		/* if (cmd->command[i + 2])
 			return (0);
-		else
-			return (1);
+		else */
+		return (1);
 	}	
 }
 
@@ -70,7 +70,7 @@ int	check_redir(t_full_comm *cmd)
 	i = 0;
 	while (cmd->command[i])
 	{
-		if (!ft_strncmp(cmd->command[0], "<<", 2))
+		if (!ft_strncmp(cmd->command[i], "<<", 2))
 		{
 			if (check_redir_aux(cmd, i) == 1)
 				return (1);
