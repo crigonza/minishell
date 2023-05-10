@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: itorres- <itorres-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/09 10:14:04 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/10 09:07:44 by itorres-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <fcntl.h>
+
+int						g_exit_value;
 
 typedef struct s_lexer
 {
@@ -69,27 +71,29 @@ typedef struct s_heredoc
 
 //main.c
 int						main(int argc, char **argv, char **envp);
+void					finish_init(char *prompt, t_ev **env);
 int						init_prompt(t_ev **env);
 int						exit_v(char *prompt);
 void					free_envp(t_ev **env);
 //lexer.c
 void					free_lexer(t_lexer **lexer);
-void					init_lexer(char *prompt, t_ev **envp);
 int						get_string(t_lexer **lexer, char *prompt);
-t_lexer					*new_token(char *content, int token_type);
 void					add_token(t_lexer **lexer, t_lexer *new);
+void					init_lexer(char *prompt, t_ev **envp);
+t_lexer					*new_token(char *content, int token_type);
+
 //lexer_utils.c
-int						get_command(t_lexer **lexer, char *prompt);
-int						set_tokens(char first, char next, t_lexer **lexer);
 int						close_quotes(char *prompt);
 int						check_echo_opt(t_lexer **lexer, char *prompt);
 int						get_echo_string(t_lexer **lexer, char *prompt);
+int						get_command(t_lexer **lexer, char *prompt);
+int						set_tokens(char first, char next, t_lexer **lexer);
 //expander.c
-void					expander(t_lexer **lexer, t_ev **envp);
-char					*get_envp(t_ev **env, char *content);
 char					*expand_envp(char *content, char *key, char *value);
+char					*get_envp(t_ev **env, char *content);
 int						check_squotes(char *str);
 void					expand_ret_val(t_lexer **lexer);
+void					expander(t_lexer **lexer, t_ev **envp);
 //expander_utils.c
 void					sintax_error(char *cmd);
 void					retokenize(t_lexer **lexer, t_ev **envp);
@@ -99,50 +103,53 @@ int						full_path(t_lexer **lexer, t_ev **env);
 //parser.c
 void					parser(t_lexer **lexer, t_ev **envp);
 void					parse_command(t_full_comm **command, t_lexer **lexer);
+void					free_command(t_full_comm **command);
 void					add_command(t_full_comm **command, \
 							t_full_comm *new_command);
-void					free_command(t_full_comm **command);
 t_full_comm				*new_command(char **command, int pipe);
 //executer.c
 void					first_child(t_full_comm *cmd, char **envp, int *prpipe);
 void					last_child(t_full_comm *cmd, char **envp, int prpipe);
 void					exe_init(t_command *cmd);
-void					solo_cmd(t_full_comm *cmd, char **envp);
 void					execute(t_full_comm **cmd, t_ev **l_env, char **env);
-//t_full_comm				*execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env);
-void				execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env);
+void					execute_pipe(t_full_comm **cmd, \
+							t_ev **l_env, char **env);
+//executer_utils.c
+void					solo_cmd(t_full_comm *cmd, char **envp);
+//builtin.c
+void					echo_builtin(char **command);
+void					pwd_builtin(char **command);
+void					env_builtin(t_ev **envp, char **command);
+void					free_tmp(t_ev	*tmp);
+void					unset_builtin(t_ev **envp, char **command);
 //builtin_utils.c
 int						is_builtin(char *cmd);
 void					builtin_exe(t_full_comm *cmd, t_ev **envp);
-void					builtin_pipe(t_full_comm *cmd, \
-							t_ev **envp, int *prpipe);
 void					last_builtin_pipe(t_full_comm *cmd, \
 							t_ev **envp, int prpipe);
+void					builtin_pipe(t_full_comm *cmd, \
+							t_ev **envp, int *prpipe);
 int						check_key(t_ev **env, char *key, char *value);
 //cd.c
-void					cd_builtin(t_ev **envp, char **command);
 void					change_pwd(t_ev **envp, char *path);
 void					cd_home(t_ev **envp);
+void					cd_builtin(t_ev **envp, char **command);
 //export.c
 void					order_vars(t_ev **envp);
 void					print_order_ev(t_ev **envp);
+t_ev					*export_whout_args_aux(t_ev	*tmp, \
+							t_ev	*env, t_ev	*ordered_env);
 void					export_whout_args(t_ev **envp);
-t_ev					*export_whout_args_aux(t_ev	*tmp, t_ev	*env, t_ev	*ordered_env);
 void					export(t_ev **env, char *key, char *value);
 //export_utils.c
 void					export_builtin(t_ev **envp, char **command);
 void					change_values(t_ev *current, t_ev *next);
-//builtin.c
-void					echo_builtin(char **command);
-void					pwd_builtin(void);
-void					env_builtin(t_ev **envp, char **env);
-void					unset_builtin(t_ev **envp, char **command);
 //envp.c
-void					set_envp(char **envp, t_ev **env);
-void					free_env_array(char **env);
-char					**convert_envp(t_ev **env);
 t_ev					*new_ev(char *key, char *value);
 void					add_ev(t_ev **env, t_ev *new);
+void					free_env_array(char **env);
+char					**convert_envp(t_ev **env);
+void					set_envp(char **envp, t_ev **env);
 //utils.c
 void					print_lexer(t_lexer **lexer);
 void					print_command(t_full_comm **command);
@@ -155,13 +162,14 @@ void					process_signal(int signum, siginfo_t *info, \
 void					config_signals(void);
 //heredoc.c
 void					add_line(t_heredoc **hrdc, t_heredoc *new_hrdc);
-void					heredoc(char *limit);
 t_heredoc				*new_doc(char *str);
 void					free_hrdc(t_heredoc **hrdc);
 void					print_heredoc(t_heredoc **hrdc);
+void					heredoc(char *limit);
 //redir.c
-void					file_in(t_full_comm *cmd, int i);
 void					file_out(t_full_comm *cmd, int i);
+void					file_in(t_full_comm *cmd, int i);
+int						check_redir_aux(t_full_comm *cmd, int i);
 int						check_redir(t_full_comm *cmd);
 void					redir_solo_cmd(t_full_comm *cmd);
 
