@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:11:13 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:33:23 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 08:36:03 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ int	init_prompt(t_ev **env)
 	while (1)
 	{
 		config_signals();
-		prompt = readline("\e[34m"
-							"MiniShell$>"
-							"\x1b[m");
+		prompt = readline("\e[34m""MiniShell$>""\x1b[m");
 		if (!prompt)
 		{
 			printf("exit\n");

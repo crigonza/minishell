@@ -6,21 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:37:14 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/10 23:32:01 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 09:05:36 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 extern int	g_exit_value;
-
-void	syntax_error(char *cmd)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(cmd, 2);
-	ft_putendl_fd(": command not found", 2);
-	exit(127);
-}
 
 void	retokenize(t_lexer **lexer, t_ev **envp)
 {
@@ -31,12 +23,12 @@ void	retokenize(t_lexer **lexer, t_ev **envp)
 	tmp = *lexer;
 	while (tmp != NULL)
 	{
-		if (tmp->token_type == COMMAND)
+		if (tmp->e_token_type == COMMAND)
 		{
 			while (tmp->content[i])
 			{
 				if (tmp->content[i] == '$')
-					tmp->token_type = STRING;
+					tmp->e_token_type = STRING;
 				i++;
 			}
 		}
@@ -69,7 +61,7 @@ void	get_full_path(char **path, t_lexer *lex)
 	char	*pth;
 
 	i = 0;
-	if (lex->token_type == COMMAND && !is_builtin(lex->content))
+	if (lex->e_token_type == COMMAND && !is_builtin(lex->content))
 	{
 		while (path[i])
 		{
@@ -89,12 +81,28 @@ void	get_full_path(char **path, t_lexer *lex)
 	}
 }
 
+void	full_path_aux(t_lexer **lexer, t_ev **env)
+{
+	t_lexer	*tmp;
+
+	tmp = *lexer;
+	while (tmp != NULL)
+	{
+		if (tmp->e_token_type == PIPE)
+		{
+			tmp = tmp->next;
+			full_path(&tmp, env);
+		}
+		tmp = tmp->next;
+	}
+}
+
 void	full_path(t_lexer **lexer, t_ev **env)
 {
-	t_lexer *tmp;
-	char *path;
-	char **split_path;
-	int i;
+	t_lexer	*tmp;
+	char	*path;
+	char	**split_path;
+	int		i;
 
 	i = 0;
 	tmp = *lexer;
@@ -109,14 +117,6 @@ void	full_path(t_lexer **lexer, t_ev **env)
 			i++;
 		}
 		free(split_path);
-		while (tmp != NULL)
-		{
-			if (tmp->token_type == PIPE)
-			{
-				tmp = tmp->next;
-				full_path(&tmp, env);
-			}
-			tmp = tmp->next;
-		}
+		full_path_aux(lexer, env);
 	}
 }

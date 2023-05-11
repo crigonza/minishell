@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:57:40 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:30:55 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 11:51:03 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ int	close_quotes(char *prompt)
 	int	quote;
 	int	i;
 
-	i = 1;
+	i = 0;
 	quote = 0;
 	while (prompt[i])
 	{
-		if (prompt[i] == 34)
+		if (prompt[i] == 34 || prompt[i] == 39)
 			quote++;
 		i++;
 	}
@@ -75,7 +75,7 @@ char	*clean_quotes(char *prompt, int quotes, int len)
 	i = 0;
 	j = 0;
 	str = malloc(sizeof(len + 1 - quotes));
-	while (i < len)
+	while (i < len - quotes - 1)
 	{
 		while (prompt[i] == 34)
 			i++;
@@ -87,15 +87,54 @@ char	*clean_quotes(char *prompt, int quotes, int len)
 	return (str);
 }
 
-int	with_quotes(t_lexer **lexer, char *prompt, int quotes)
+int	between_quotes(char *prompt, int quotes)
 {
-	int i;
-	char *str;
+	int	i;
 
 	i = 0;
+	while(prompt[i] && quotes != 0)
+	{
+		if(prompt[i] == 34 || prompt[i] == 39)
+			quotes --;
+		i++;
+	}
+	return (i);
+}
+
+int	with_quotes(t_lexer **lexer, char *prompt, int quotes)
+{
+	int		i;
+	char	*str;
+
+	i = 0;
+	/* while(prompt[i])
+	{
+		if(prompt[i] == 34 || prompt[i] == 39)
+		{
+			while(prompt[i] && q > 0)
+			{
+				if(prompt[i] == 34 || prompt[i] == 39)
+					q --;
+				printf("%c", prompt[i]);
+				printf("%d", q);
+				i++;
+			}
+		}
+		else
+		{
+			if(prompt[i] == '|' || prompt[i] == '<' || prompt[i] == '>')
+				break;
+		}
+		i++;
+	} */
+	
 	while ((prompt[i]) && (prompt[i] != '|') && (prompt[i] != '<')
 		&& (prompt[i] != '>'))
+	{
+		if((prompt[i] == 34 || prompt[i] == 39) && quotes > 1)
+			i += between_quotes(&prompt[i], quotes);
 		i++;
+	}
 	if (prompt[i] == '|' && prompt[i - 1] == ' ')
 	{
 		i--;

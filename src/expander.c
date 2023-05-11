@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:32:14 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 11:46:07 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,10 @@ void	expand_ret_val(t_lexer **lexer)
 				tmp->content = ft_itoa(127);
 			else if (g_exit_value == 0)
 				tmp->content = ft_itoa(0);
+			else if (g_exit_value == 130)
+				tmp->content = ft_itoa(130);	
+			else if (g_exit_value == 131)
+				tmp->content = ft_itoa(131);
 		}
 		tmp = tmp->next;
 	}
@@ -136,6 +140,5 @@ void	expander(t_lexer **lexer, t_ev **envp)
 		}
 		tmp = tmp->next;
 	}
-	print_lexer(lexer);
 	parser(lexer, envp);
 }

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:49:07 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:33:53 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 08:43:45 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,6 @@ int	check_redir_aux(t_full_comm *cmd, int i)
 	else
 	{
 		heredoc(cmd->command[i + 1]);
-		/* if (cmd->command[i + 2])
-			return (0);
-		else */
 		return (1);
 	}
 }

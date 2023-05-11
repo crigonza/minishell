@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:47 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:33:42 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 09:05:36 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	parser(t_lexer **lexer, t_ev **envp)
 	command->command = NULL;
 	command->env = envp;
 	parse_command(&command->command, lexer);
-	print_command(&command->command);
 	exe_init(command);
 	free_command(&command->command);
 	free(command);
@@ -32,31 +31,24 @@ void	parse_command(t_full_comm **command, t_lexer **lexer)
 	t_lexer	*tmp;
 	int		i;
 	int		pipe;
-	int		redir;
 
 	i = 0;
 	pipe = 0;
-	redir = 0;
 	tmp = *lexer;
 	comm = malloc(sizeof(char *) * (get_count(lexer) + 1));
 	comm[get_count(lexer)] = NULL;
-	while (tmp != NULL && tmp->token_type != PIPE && redir != 2)
+	while (tmp != NULL && tmp->e_token_type != PIPE)
 	{
-		if (redir == 1)
-			redir++;
-		if (tmp->token_type == D_LESS_THAN)
-			redir = 1;
 		comm[i] = tmp->content;
 		tmp = tmp->next;
 		i++;
 	}
-	if (tmp != NULL && tmp->token_type == PIPE)
+	if (tmp != NULL && tmp->e_token_type == PIPE)
 		pipe = 1;
 	add_command(command, new_command(comm, pipe));
-	if (tmp != NULL && (tmp->token_type == PIPE || redir == 2))
+	if (tmp != NULL && (tmp->e_token_type == PIPE))
 	{
-		if (redir != 2)
-			tmp = tmp->next;
+		tmp = tmp->next;
 		parse_command(command, &tmp);
 	}
 }

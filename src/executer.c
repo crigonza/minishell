@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:31:50 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 11:48:35 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ void	exe_init(t_command *cmd)
 	else
 		execute(&tmp, cmd->env, env);
 	if (g_exit_value > 1 && g_exit_value != 256)
-		g_exit_value = 127;
+	{
+		if(g_exit_value != 130 && g_exit_value != 131 )
+			g_exit_value = 127;
+	}
 	free_env_array(env);
 }
 

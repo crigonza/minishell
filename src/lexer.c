@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:39:59 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:33:15 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 09:05:36 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,13 +74,12 @@ void	init_lexer(char *prompt, t_ev **envp)
 		else
 			i += set_tokens(prompt[i], prompt[i + 1], &lexer);
 	}
-	print_lexer(&lexer);
 	if (lexer != NULL)
 		retokenize(&lexer, envp);
 	free_lexer(&lexer);
 }
 
-t_lexer	*new_token(char *content, int token_type)
+t_lexer	*new_token(char *content, int e_token_type)
 {
 	t_lexer	*new;
 
@@ -88,7 +87,7 @@ t_lexer	*new_token(char *content, int token_type)
 	if (!new)
 		return (NULL);
 	new->content = ft_strdup(content);
-	new->token_type = token_type;
+	new->e_token_type = e_token_type;
 	new->next = NULL;
 	return (new);
 }

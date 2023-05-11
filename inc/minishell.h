@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:45:46 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 09:05:46 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_lexer
 		GREATER_THAN,
 		D_LESS_THAN,
 		D_GREATER_THAN,
-	} token_type;
+	} e_token_type;
 	char				*content;
 	struct s_lexer		*next;
 }						t_lexer;
@@ -72,12 +72,10 @@ typedef struct s_heredoc
 //builtin_utils.c
 int						is_builtin(char *cmd);
 void					builtin_exe_pid(t_full_comm *cmd, t_ev **envp);
-void	last_builtin_pipe(t_full_comm *cmd,
-						t_ev **envp,
-						int prpipe);
-void	builtin_pipe(t_full_comm *cmd,
-					t_ev **envp,
-					int *prpipe);
+void					last_builtin_pipe(t_full_comm *cmd, t_ev **envp,
+							int prpipe);
+void					builtin_pipe(t_full_comm *cmd, t_ev **envp,
+							int *prpipe);
 int						check_key(t_ev **env, char *key, char *value);
 //builtin.c
 void					echo_builtin(char **command);
@@ -108,14 +106,13 @@ void					first_child(t_full_comm *cmd, char **envp, int *prpipe);
 void					last_child(t_full_comm *cmd, char **envp, int prpipe);
 void					exe_init(t_command *cmd);
 void					execute(t_full_comm **cmd, t_ev **l_env, char **env);
-void	execute_pipe(t_full_comm **cmd,
-					t_ev **l_env,
-					char **env);
+void					execute_pipe(t_full_comm **cmd, t_ev **l_env,
+							char **env);
 //expander_utils.c
-void					syntax_error(char *cmd);
 void					retokenize(t_lexer **lexer, t_ev **envp);
 char					*get_path(t_ev **env);
 void					get_full_path(char **path, t_lexer *lex);
+void					full_path_aux(t_lexer **lexer, t_ev **env);
 void					full_path(t_lexer **lexer, t_ev **env);
 //expander.c
 char					*expand_envp(char *content, char *key, char *value);
@@ -129,8 +126,7 @@ void					change_values(t_ev *current, t_ev *next);
 //export.c
 void					order_vars(t_ev **envp);
 void					print_order_ev(t_ev **envp);
-t_ev	*export_whout_args_aux(t_ev *tmp,
-							t_ev *env,
+t_ev					*export_whout_args_aux(t_ev *tmp, t_ev *env,
 							t_ev *ordered_env);
 void					export_whout_args(t_ev **envp);
 void					export(t_ev **env, char *key, char *value);
@@ -149,7 +145,7 @@ void					free_lexer(t_lexer **lexer);
 int						get_string(t_lexer **lexer, char *prompt);
 void					add_token(t_lexer **lexer, t_lexer *new);
 void					init_lexer(char *prompt, t_ev **envp);
-t_lexer					*new_token(char *content, int token_type);
+t_lexer					*new_token(char *content, int e_token_type);
 //main.c
 int						main(int argc, char **argv, char **envp);
 void					finish_init(char *prompt, t_ev **env);
@@ -160,8 +156,8 @@ void					free_envp(t_ev **env);
 void					parser(t_lexer **lexer, t_ev **envp);
 void					parse_command(t_full_comm **command, t_lexer **lexer);
 void					free_command(t_full_comm **command);
-void	add_command(t_full_comm **command,
-					t_full_comm *new_command);
+void					add_command(t_full_comm **command,
+							t_full_comm *new_command);
 t_full_comm				*new_command(char **command, int pipe);
 //redir.c
 void					file_out(t_full_comm *cmd, int i);
@@ -174,12 +170,10 @@ void					process_signal(int signum, siginfo_t *info,
 							void *context);
 void					config_signals(void);
 //utils.c
-void					print_lexer(t_lexer **lexer);
-void					print_command(t_full_comm **command);
 int						ft_strcmp(char *str1, char *str2);
 int						ev_len(t_ev **env);
 int						get_count(t_lexer **lexer);
 void					free_tmp(t_ev *tmp);
-
+void					syntax_error(char *cmd);
 
 #endif

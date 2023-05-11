@@ -6,45 +6,11 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 19:38:34 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:45:50 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 09:05:54 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-void	print_lexer(t_lexer **lexer)
-{
-	t_lexer	*tmp;
-
-	tmp = *lexer;
-	while (tmp != NULL)
-	{
-		printf("TOKEN %d = %s\n", tmp->token_type, tmp->content);
-		tmp = tmp->next;
-	}
-	printf("*******************************\n");
-}
-
-void	print_command(t_full_comm **command)
-{
-	t_full_comm	*tmp;
-	int			i;
-
-	i = 0;
-	tmp = *command;
-	while (tmp != NULL)
-	{
-		while (tmp->command[i] != NULL)
-		{
-			printf("%s, ", tmp->command[i]);
-			i++;
-		}
-		printf("\n");
-		i = 0;
-		tmp = tmp->next;
-	}
-	printf("\n");
-}
 
 int	ft_strcmp(char *str1, char *str2)
 {
@@ -78,7 +44,7 @@ int	get_count(t_lexer **lexer)
 
 	count = 0;
 	tmp = *lexer;
-	while (tmp != NULL && tmp->token_type != PIPE)
+	while (tmp != NULL && tmp->e_token_type != PIPE)
 	{
 		tmp = tmp->next;
 		count++;
@@ -91,4 +57,12 @@ void	free_tmp(t_ev *tmp)
 	free(tmp->key);
 	free(tmp->value);
 	free(tmp);
+}
+
+void	syntax_error(char *cmd)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(cmd, 2);
+	ft_putendl_fd(": command not found", 2);
+	exit(127);
 }
