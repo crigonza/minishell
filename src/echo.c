@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:57:40 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/11 11:51:03 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/11 12:18:38 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,17 @@ char	*clean_quotes(char *prompt, int quotes, int len)
 
 	i = 0;
 	j = 0;
+	while (prompt[i] && i < len)
+	{
+		if(prompt[i] == 39)
+			j++;
+		i++;
+	}
+	quotes -= j;
+	j = 0;
+	i = 0;
 	str = malloc(sizeof(len + 1 - quotes));
-	while (i < len - quotes - 1)
+	while (i < len)
 	{
 		while (prompt[i] == 34)
 			i++;
@@ -83,7 +92,7 @@ char	*clean_quotes(char *prompt, int quotes, int len)
 		j++;
 		i++;
 	}
-	prompt[i] = '\0';
+	str[i] = '\0';
 	return (str);
 }
 
@@ -96,7 +105,8 @@ int	between_quotes(char *prompt, int quotes)
 	{
 		if(prompt[i] == 34 || prompt[i] == 39)
 			quotes --;
-		i++;
+		if(quotes != 0)
+			i++;
 	}
 	return (i);
 }
@@ -106,28 +116,7 @@ int	with_quotes(t_lexer **lexer, char *prompt, int quotes)
 	int		i;
 	char	*str;
 
-	i = 0;
-	/* while(prompt[i])
-	{
-		if(prompt[i] == 34 || prompt[i] == 39)
-		{
-			while(prompt[i] && q > 0)
-			{
-				if(prompt[i] == 34 || prompt[i] == 39)
-					q --;
-				printf("%c", prompt[i]);
-				printf("%d", q);
-				i++;
-			}
-		}
-		else
-		{
-			if(prompt[i] == '|' || prompt[i] == '<' || prompt[i] == '>')
-				break;
-		}
-		i++;
-	} */
-	
+	i = 0;	
 	while ((prompt[i]) && (prompt[i] != '|') && (prompt[i] != '<')
 		&& (prompt[i] != '>'))
 	{
