@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:26:18 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:44:46 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:02:49 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,15 @@ extern int	g_exit_value;
 
 void	echo_builtin(char **command)
 {
-	if (!ft_strncmp(command[1], "-n", 2))
-		ft_putstr_fd(command[2], 1);
+	if (!command[1])
+		ft_putchar_fd('\n', 1);
 	else
-		ft_putendl_fd(command[1], 1);
+	{
+		if (!ft_strncmp(command[1], "-n", 2))
+			ft_putstr_fd(command[2], 1);
+		else
+			ft_putendl_fd(command[1], 1);
+	}
 	g_exit_value = 0;
 }
 

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 21:32:58 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/11 09:05:46 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/17 12:29:05 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,11 +87,14 @@ void					builtin_exe(t_full_comm *cmd, t_ev **envp);
 void					change_pwd(t_ev **envp, char *path);
 void					cd_home(t_ev **envp);
 void					cd_builtin(t_ev **envp, char **command);
+//echo_utils.c
+char					*clean_quotes_aux(char *prompt, int quotes, int len);
+char					*clean_quotes(char *prompt, int quotes, int len);
 //echo.c
 int						close_quotes(char *prompt);
 int						check_echo_opt(t_lexer **lexer, char *prompt);
 int						without_quotes(t_lexer **lexer, char *prompt);
-char					*clean_quotes(char *prompt, int quotes, int len);
+int						between_quotes(char *prompt, int quotes);
 int						with_quotes(t_lexer **lexer, char *prompt, int quotes);
 //envp.c
 t_ev					*new_ev(char *key, char *value);
@@ -101,6 +104,7 @@ char					**convert_envp(t_ev **env);
 void					set_envp(char **envp, t_ev **env);
 //executer_utils.c
 void					solo_cmd(t_full_comm *cmd, char **envp);
+void					wait_4_pids(void);
 //executer.c
 void					first_child(t_full_comm *cmd, char **envp, int *prpipe);
 void					last_child(t_full_comm *cmd, char **envp, int prpipe);
@@ -109,16 +113,21 @@ void					execute(t_full_comm **cmd, t_ev **l_env, char **env);
 void					execute_pipe(t_full_comm **cmd, t_ev **l_env,
 							char **env);
 //expander_utils.c
-void					retokenize(t_lexer **lexer, t_ev **envp);
 char					*get_path(t_ev **env);
 void					get_full_path(char **path, t_lexer *lex);
 void					full_path_aux(t_lexer **lexer, t_ev **env);
 void					full_path(t_lexer **lexer, t_ev **env);
+int						check_squotes(char *str);
+//expander_utils2.c
+char					*check_more_dollars(t_ev **envp, char *content);
+char					*expand_dollar(t_ev **envp, char *content);
+char					*expand_dollar_aux(t_ev **envp, char *content,
+							char *tmp);
 //expander.c
 char					*expand_envp(char *content, char *key, char *value);
 char					*get_envp(t_ev **env, char *content);
-int						check_squotes(char *str);
 void					expand_ret_val(t_lexer **lexer);
+char					*expand_aux(t_ev **envp, char *content, int len);
 void					expander(t_lexer **lexer, t_ev **envp);
 //export_utils.c
 void					export_builtin(t_ev **envp, char **command);
@@ -142,7 +151,6 @@ int						get_command(t_lexer **lexer, char *prompt);
 int						set_tokens(char first, char next, t_lexer **lexer);
 //lexer.c
 void					free_lexer(t_lexer **lexer);
-int						get_string(t_lexer **lexer, char *prompt);
 void					add_token(t_lexer **lexer, t_lexer *new);
 void					init_lexer(char *prompt, t_ev **envp);
 t_lexer					*new_token(char *content, int e_token_type);

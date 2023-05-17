@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/11 11:46:07 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/17 11:59:27 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,82 +16,31 @@ extern int	g_exit_value;
 
 char	*expand_envp(char *content, char *key, char *value)
 {
-	int		i;
 	char	*expanded;
-	char	*expanded_out;
 	char	*back;
 
-	i = 0;
-	expanded_out = NULL;
-	if (content[i] != '$')
-	{
-		while (content[i] != '$')
-			i++;
-		expanded = malloc(sizeof(i) + 1);
-		ft_strlcpy(expanded, content, i + 1);
-		expanded_out = ft_strjoin(expanded, value);
-		free(expanded);
-	}
-	else
-		expanded = value;
-	back = ft_strnstr(content, key, ft_strlen(content)) + ft_strlen(key);
-	if (expanded_out != NULL && back != NULL)
-		expanded = ft_strjoin(expanded_out, back);
-	free(content);
-	free(expanded_out);
+	back = ft_substr(content, ft_strlen(key), ft_strlen(content));
+	expanded = ft_strjoin(value, back);
+	free(back);
 	return (expanded);
 }
 
 char	*get_envp(t_ev **env, char *content)
 {
-	char	*var;
 	char	*expanded;
 	t_ev	*tmp;
-	int		i;
 
-	i = 0;
 	tmp = *env;
-	var = ft_strchr(content, '$') + 1;
 	while (tmp != NULL)
 	{
-		if (!ft_strncmp(tmp->key, var, ft_strlen(tmp->key)))
+		if (!ft_strncmp(tmp->key, content, ft_strlen(tmp->key)))
 		{
 			expanded = expand_envp(content, tmp->key, tmp->value);
 			return (expanded);
 		}
 		tmp = tmp->next;
 	}
-	while (content[i] != '$')
-		i++;
-	expanded = malloc(sizeof(i + 1));
-	ft_strlcpy(expanded, content, i + 1);
-	free(content);
-	return (expanded);
-}
-
-int	check_squotes(char *str)
-{
-	int	i;
-	int	quote;
-	int	dollar;
-
-	i = 0;
-	quote = 0;
-	dollar = 0;
-	while (str[i])
-	{
-		if (str[i] == 39)
-		{
-			if (quote == 1 && dollar == 1)
-				return (1);
-			else if (quote == 0)
-				quote = 1;
-		}
-		else if (str[i] == '$' && quote == 1)
-			dollar = 1;
-		i++;
-	}
-	return (0);
+	return (NULL);
 }
 
 void	expand_ret_val(t_lexer **lexer)
@@ -111,12 +60,28 @@ void	expand_ret_val(t_lexer **lexer)
 			else if (g_exit_value == 0)
 				tmp->content = ft_itoa(0);
 			else if (g_exit_value == 130)
-				tmp->content = ft_itoa(130);	
+				tmp->content = ft_itoa(130);
 			else if (g_exit_value == 131)
 				tmp->content = ft_itoa(131);
 		}
 		tmp = tmp->next;
 	}
+}
+
+char	*expand_aux(t_ev **envp, char *content, int len)
+{
+	char	*aux;
+	char	*tmp;
+
+	aux = (char *)malloc(sizeof(char) * len + 1);
+	ft_strlcpy(aux, content, len + 1);
+	tmp = get_envp(envp, &content[len + 1]);
+	if (tmp != NULL)
+	{
+		aux = ft_strjoin(aux, tmp);
+		free (tmp);
+	}	
+	return (aux);
 }
 
 void	expander(t_lexer **lexer, t_ev **envp)
@@ -129,13 +94,10 @@ void	expander(t_lexer **lexer, t_ev **envp)
 	while (tmp != NULL)
 	{
 		i = 0;
-		while (tmp->content[i] != '\0')
+		while (tmp->content[i])
 		{
 			if (tmp->content[i] == '$')
-			{
-				if (!check_squotes(tmp->content))
-					tmp->content = get_envp(envp, tmp->content);
-			}
+				tmp->content = expand_dollar(envp, tmp->content);
 			i++;
 		}
 		tmp = tmp->next;

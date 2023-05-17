@@ -6,37 +6,13 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 13:37:14 by itorres-          #+#    #+#             */
-/*   Updated: 2023/05/11 09:05:36 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/17 11:49:55 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 extern int	g_exit_value;
-
-void	retokenize(t_lexer **lexer, t_ev **envp)
-{
-	t_lexer	*tmp;
-	int		i;
-
-	i = 0;
-	tmp = *lexer;
-	while (tmp != NULL)
-	{
-		if (tmp->e_token_type == COMMAND)
-		{
-			while (tmp->content[i])
-			{
-				if (tmp->content[i] == '$')
-					tmp->e_token_type = STRING;
-				i++;
-			}
-		}
-		tmp = tmp->next;
-	}
-	full_path(lexer, envp);
-	expander(lexer, envp);
-}
 
 char	*get_path(t_ev **env)
 {
@@ -119,4 +95,18 @@ void	full_path(t_lexer **lexer, t_ev **env)
 		free(split_path);
 		full_path_aux(lexer, env);
 	}
+}
+
+int	check_squotes(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == 39 && i > 2)
+			return (1);
+		i++;
+	}
+	return (0);
 }

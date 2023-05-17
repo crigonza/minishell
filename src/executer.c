@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/09 18:38:15 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/11 13:11:48 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/17 11:48:07 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void	first_child(t_full_comm *cmd, char **envp, int *prpipe)
 		close(fd[1]);
 		close(*prpipe);
 		*prpipe = fd[0];
-		//waitpid(-1, &g_exit_value, 0);
 	}
 }
 
@@ -55,10 +54,7 @@ void	last_child(t_full_comm *cmd, char **envp, int prpipe)
 			syntax_error(cmd->command[0]);
 	}
 	else
-	{
 		close(prpipe);
-		//waitpid(pid, &g_exit_value, 0);
-	}
 }
 
 void	exe_init(t_command *cmd)
@@ -74,7 +70,7 @@ void	exe_init(t_command *cmd)
 		execute(&tmp, cmd->env, env);
 	if (g_exit_value > 1 && g_exit_value != 256)
 	{
-		if(g_exit_value != 130 && g_exit_value != 131 )
+		if (g_exit_value != 130 && g_exit_value != 131)
 			g_exit_value = 127;
 	}
 	free_env_array(env);
@@ -98,9 +94,7 @@ void	execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
 {
 	t_full_comm	*tmp;
 	int			prpipe;
-	int			x;
 
-	x = 0;
 	prpipe = dup(0);
 	tmp = *cmd;
 	while (tmp != NULL)
@@ -122,6 +116,5 @@ void	execute_pipe(t_full_comm **cmd, t_ev **l_env, char **env)
 		}
 		tmp = tmp->next;
 	}
-	while (x != -1)
-		x = wait(NULL);
+	wait_4_pids();
 }
