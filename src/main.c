@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/28 11:11:13 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/11 08:36:03 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/17 12:59:56 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,6 @@ int	main(int argc, char **argv, char **envp)
 	exval = init_prompt(&env);
 	free_envp(&env);
 	rl_clear_history();
-	system("leaks -q --fullStacks --list minishell");
+	system("leaks -q minishell");
 	exit(exval);
 }

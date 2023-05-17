@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 11:51:35 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/17 12:39:52 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/17 13:09:37 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,5 @@ char	*expand_dollar_aux(t_ev **envp, char *content, char *tmp)
 
 	free(content);
 	aux = check_more_dollars(envp, tmp);
-	//free (tmp);
 	return (aux);
 }

@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/08 16:47:24 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/17 11:59:27 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/17 13:20:20 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,19 @@ char	*expand_aux(t_ev **envp, char *content, int len)
 {
 	char	*aux;
 	char	*tmp;
+	char	*expand;
 
+	expand = NULL;
 	aux = (char *)malloc(sizeof(char) * len + 1);
 	ft_strlcpy(aux, content, len + 1);
 	tmp = get_envp(envp, &content[len + 1]);
 	if (tmp != NULL)
 	{
-		aux = ft_strjoin(aux, tmp);
+		expand = ft_strjoin(aux, tmp);
 		free (tmp);
-	}	
+		free (aux);
+		return (expand);
+	}
 	return (aux);
 }
 
