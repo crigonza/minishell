@@ -6,7 +6,7 @@
 /*   By: crigonza <crigonza@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:52:11 by crigonza          #+#    #+#             */
-/*   Updated: 2023/05/10 23:32:44 by crigonza         ###   ########.fr       */
+/*   Updated: 2023/05/22 18:26:20 by crigonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,9 @@ void	export(t_ev **env, char *key, char *value)
 
 	tmp = *env;
 	export = new_ev(key, value);
-	while (tmp->next != NULL && tmp->next->next != NULL)
+	free (key);
+	free (value);
+	while (tmp->next->next != NULL)
 	{
 		tmp = tmp->next;
 	}
